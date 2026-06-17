@@ -53,33 +53,33 @@ function syncToDrive(_x, _x2) {
   return _syncToDrive.apply(this, arguments);
 }
 function _syncToDrive() {
-  _syncToDrive = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(action, payload) {
+  _syncToDrive = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(action, payload) {
     var body, _t3;
-    return _regenerator().w(function (_context7) {
-      while (1) switch (_context7.p = _context7.n) {
+    return _regenerator().w(function (_context8) {
+      while (1) switch (_context8.p = _context8.n) {
         case 0:
-          _context7.p = 0;
+          _context8.p = 0;
           body = new URLSearchParams();
           body.append("payload", JSON.stringify(_objectSpread({
             action: action
           }, payload)));
-          _context7.n = 1;
+          _context8.n = 1;
           return fetch(WEBHOOK, {
             method: "POST",
             mode: "no-cors",
             body: body
           });
         case 1:
-          _context7.n = 3;
+          _context8.n = 3;
           break;
         case 2:
-          _context7.p = 2;
-          _t3 = _context7.v;
+          _context8.p = 2;
+          _t3 = _context8.v;
           console.warn("Drive sync failed:", _t3);
         case 3:
-          return _context7.a(2);
+          return _context8.a(2);
       }
-    }, _callee7, null, [[0, 2]]);
+    }, _callee8, null, [[0, 2]]);
   }));
   return _syncToDrive.apply(this, arguments);
 }
@@ -87,26 +87,26 @@ function fetchFromDrive() {
   return _fetchFromDrive.apply(this, arguments);
 } // ── Prospect log fetch ────────────────────────────────────────────────────────
 function _fetchFromDrive() {
-  _fetchFromDrive = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8() {
+  _fetchFromDrive = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9() {
     var res, json;
-    return _regenerator().w(function (_context8) {
-      while (1) switch (_context8.n) {
+    return _regenerator().w(function (_context9) {
+      while (1) switch (_context9.n) {
         case 0:
-          _context8.n = 1;
+          _context9.n = 1;
           return fetch(WEBHOOK + "?action=read");
         case 1:
-          res = _context8.v;
-          _context8.n = 2;
+          res = _context9.v;
+          _context9.n = 2;
           return res.json();
         case 2:
-          json = _context8.v;
+          json = _context9.v;
           if (!(!json.ok || !json.data)) {
-            _context8.n = 3;
+            _context9.n = 3;
             break;
           }
           throw new Error(json.error || "No data");
         case 3:
-          return _context8.a(2, json.data.map(function (row, i) {
+          return _context9.a(2, json.data.map(function (row, i) {
             return {
               id: "sheet-".concat((row['Business'] || '').toLowerCase().replace(/[^a-z0-9]/g, '-'), "-").concat(row['ZIP'] || i),
               business: row['Business'] || '',
@@ -125,7 +125,7 @@ function _fetchFromDrive() {
             return e.business.trim();
           }));
       }
-    }, _callee8);
+    }, _callee9);
   }));
   return _fetchFromDrive.apply(this, arguments);
 }
@@ -133,30 +133,30 @@ function fetchProspectLog() {
   return _fetchProspectLog.apply(this, arguments);
 } // ── Local storage (replaces window.storage) ───────────────────────────────────
 function _fetchProspectLog() {
-  _fetchProspectLog = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9() {
+  _fetchProspectLog = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0() {
     var res, json;
-    return _regenerator().w(function (_context9) {
-      while (1) switch (_context9.n) {
+    return _regenerator().w(function (_context0) {
+      while (1) switch (_context0.n) {
         case 0:
-          _context9.n = 1;
+          _context0.n = 1;
           return fetch(WEBHOOK + "?action=read_prospects");
         case 1:
-          res = _context9.v;
-          _context9.n = 2;
+          res = _context0.v;
+          _context0.n = 2;
           return res.json();
         case 2:
-          json = _context9.v;
+          json = _context0.v;
           if (!(!json.ok || !json.data)) {
-            _context9.n = 3;
+            _context0.n = 3;
             break;
           }
           throw new Error(json.error || "No data");
         case 3:
-          return _context9.a(2, json.data.filter(function (r) {
+          return _context0.a(2, json.data.filter(function (r) {
             return r['Business'];
           }));
       }
-    }, _callee9);
+    }, _callee0);
   }));
   return _fetchProspectLog.apply(this, arguments);
 }
@@ -595,10 +595,34 @@ function App() {
     _useState34 = _slicedToArray(_useState33, 2),
     pExpanded = _useState34[0],
     setPExpanded = _useState34[1];
-  var _useState35 = useState(null),
+  var _useState35 = useState(''),
     _useState36 = _slicedToArray(_useState35, 2),
-    form = _useState36[0],
-    setForm = _useState36[1];
+    logBiz = _useState36[0],
+    setLogBiz = _useState36[1];
+  var _useState37 = useState(''),
+    _useState38 = _slicedToArray(_useState37, 2),
+    logDM = _useState38[0],
+    setLogDM = _useState38[1];
+  var _useState39 = useState(''),
+    _useState40 = _slicedToArray(_useState39, 2),
+    logNote = _useState40[0],
+    setLogNote = _useState40[1];
+  var _useState41 = useState(''),
+    _useState42 = _slicedToArray(_useState41, 2),
+    logOutcome = _useState42[0],
+    setLogOutcome = _useState42[1];
+  var _useState43 = useState(false),
+    _useState44 = _slicedToArray(_useState43, 2),
+    logSubmitting = _useState44[0],
+    setLogSubmitting = _useState44[1];
+  var _useState45 = useState(''),
+    _useState46 = _slicedToArray(_useState45, 2),
+    logSuccess = _useState46[0],
+    setLogSuccess = _useState46[1];
+  var _useState47 = useState(null),
+    _useState48 = _slicedToArray(_useState47, 2),
+    form = _useState48[0],
+    setForm = _useState48[1];
   useEffect(function () {
     var r = lsGet("aflac:pipeline");
     setEntries(r ? JSON.parse(r.value) : SEED);
@@ -714,18 +738,82 @@ function App() {
     var r = lsGet("aflac:prospects");
     if (r) setProspects(JSON.parse(r.value));
   }, []);
+  function handleLogTouch() {
+    return _handleLogTouch.apply(this, arguments);
+  }
+  function _handleLogTouch() {
+    _handleLogTouch = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+      var today, OUTCOME_STAGE, existing, entry, next;
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            if (!(!logBiz.trim() || !logOutcome)) {
+              _context4.n = 1;
+              break;
+            }
+            return _context4.a(2);
+          case 1:
+            setLogSubmitting(true);
+            today = new Date().toISOString().split('T')[0];
+            OUTCOME_STAGE = {
+              'Gatekeeper': 'Approached',
+              'Not In': 'Approached',
+              'Come Back': 'Warm',
+              'Booked Meeting': 'Meeting Set',
+              'Interested': 'Warm',
+              'DNC': 'Dead'
+            };
+            existing = entries.find(function (e) {
+              return e.business.toLowerCase().trim() === logBiz.toLowerCase().trim();
+            });
+            entry = {
+              id: existing ? existing.id : Date.now().toString(),
+              business: logBiz.trim(),
+              dm: logDM.trim() || (existing ? existing.dm : ''),
+              phone: existing ? existing.phone : '',
+              zip: existing ? existing.zip : '',
+              stage: OUTCOME_STAGE[logOutcome] || 'Approached',
+              touchCount: existing ? existing.touchCount + 1 : 1,
+              lastContact: today,
+              partner: 'Solo',
+              notes: logNote.trim() ? existing !== null && existing !== void 0 && existing.notes ? existing.notes + ' | ' + today + ': ' + logNote.trim() : today + ': ' + logNote.trim() : (existing === null || existing === void 0 ? void 0 : existing.notes) || '',
+              returnDate: logOutcome === 'Come Back' || logOutcome === 'Booked Meeting' ? (existing === null || existing === void 0 ? void 0 : existing.returnDate) || '' : (existing === null || existing === void 0 ? void 0 : existing.returnDate) || '',
+              nextAction: logOutcome === 'Booked Meeting' ? 'Prepare discovery meeting' : logOutcome === 'Come Back' ? 'Return in person' : logOutcome === 'Interested' ? 'Follow up call' : logOutcome === 'Gatekeeper' ? 'Return and ask for ' + (logDM.trim() || 'owner') : logOutcome === 'Not In' ? 'Return and try again' : ''
+            };
+            next = existing ? entries.map(function (e) {
+              return e.id === entry.id ? entry : e;
+            }) : [].concat(_toConsumableArray(entries), [entry]);
+            _context4.n = 2;
+            return persist(next, entry);
+          case 2:
+            setLogSuccess(logOutcome + ' logged for ' + logBiz.trim());
+            setLogBiz('');
+            setLogDM('');
+            setLogNote('');
+            setLogOutcome('');
+            setTimeout(function () {
+              return setLogSuccess('');
+            }, 3000);
+            setLogSubmitting(false);
+          case 3:
+            return _context4.a(2);
+        }
+      }, _callee4);
+    }));
+    return _handleLogTouch.apply(this, arguments);
+  }
   function deleteEntry() {
     return _deleteEntry.apply(this, arguments);
   }
   function _deleteEntry() {
-    _deleteEntry = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
-      return _regenerator().w(function (_context4) {
-        while (1) switch (_context4.n) {
+    _deleteEntry = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
           case 0:
             syncToDrive("delete", {
               business: form.business
             });
-            _context4.n = 1;
+            _context5.n = 1;
             return persist(entries.filter(function (e) {
               return e.id !== form.id;
             }));
@@ -733,9 +821,9 @@ function App() {
             setModal(null);
             setForm(null);
           case 2:
-            return _context4.a(2);
+            return _context5.a(2);
         }
-      }, _callee4);
+      }, _callee5);
     }));
     return _deleteEntry.apply(this, arguments);
   }
@@ -743,29 +831,29 @@ function App() {
     return _handleSync.apply(this, arguments);
   }
   function _handleSync() {
-    _handleSync = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+    _handleSync = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
       var fresh, _t2;
-      return _regenerator().w(function (_context5) {
-        while (1) switch (_context5.p = _context5.n) {
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.p = _context6.n) {
           case 0:
             setSyncing(true);
             setSyncMsg('');
-            _context5.p = 1;
-            _context5.n = 2;
+            _context6.p = 1;
+            _context6.n = 2;
             return fetchFromDrive();
           case 2:
-            fresh = _context5.v;
+            fresh = _context6.v;
             lsSet("aflac:pipeline", JSON.stringify(fresh));
             setEntries(fresh);
             setSyncMsg("Synced ".concat(fresh.length, " entries from Drive"));
             setTimeout(function () {
               return setSyncMsg('');
             }, 3000);
-            _context5.n = 4;
+            _context6.n = 4;
             break;
           case 3:
-            _context5.p = 3;
-            _t2 = _context5.v;
+            _context6.p = 3;
+            _t2 = _context6.v;
             setSyncMsg('Sync failed — check connection');
             setTimeout(function () {
               return setSyncMsg('');
@@ -773,9 +861,9 @@ function App() {
           case 4:
             setSyncing(false);
           case 5:
-            return _context5.a(2);
+            return _context6.a(2);
         }
-      }, _callee5, null, [[1, 3]]);
+      }, _callee6, null, [[1, 3]]);
     }));
     return _handleSync.apply(this, arguments);
   }
@@ -783,10 +871,10 @@ function App() {
     return _addTouch.apply(this, arguments);
   }
   function _addTouch() {
-    _addTouch = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(id, ev) {
+    _addTouch = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(id, ev) {
       var updated, changed;
-      return _regenerator().w(function (_context6) {
-        while (1) switch (_context6.n) {
+      return _regenerator().w(function (_context7) {
+        while (1) switch (_context7.n) {
           case 0:
             ev.stopPropagation();
             updated = entries.map(function (e) {
@@ -798,12 +886,12 @@ function App() {
             changed = updated.find(function (e) {
               return e.id === id;
             });
-            _context6.n = 1;
+            _context7.n = 1;
             return persist(updated, changed);
           case 1:
-            return _context6.a(2);
+            return _context7.a(2);
         }
-      }, _callee6);
+      }, _callee7);
     }));
     return _addTouch.apply(this, arguments);
   }
@@ -1061,7 +1149,25 @@ function App() {
       setModal(null);
       setForm(null);
     }
-  }), /*#__PURE__*/React.createElement("style", null, "@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}")) :
+  }), /*#__PURE__*/React.createElement("style", null, "@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}")) : activeTab === 'log' ?
+  /*#__PURE__*/
+  // ── Log Touch screen ────────────────────────────────────────────────────
+  React.createElement(LogTouchScreen, {
+    biz: logBiz,
+    setBiz: setLogBiz,
+    dm: logDM,
+    setDM: setLogDM,
+    note: logNote,
+    setNote: setLogNote,
+    outcome: logOutcome,
+    setOutcome: setLogOutcome,
+    onSubmit: handleLogTouch,
+    submitting: logSubmitting,
+    success: logSuccess,
+    recentEntries: entries.filter(function (e) {
+      return e.lastContact === new Date().toISOString().split('T')[0];
+    }).slice(-5).reverse()
+  }) :
   /*#__PURE__*/
   // ── Prospect Log screen ─────────────────────────────────────────────────
   React.createElement(ProspectLogScreen, {
@@ -1548,6 +1654,294 @@ function F(_ref7) {
   }, label), children);
 }
 
+// ── Log Touch Screen ──────────────────────────────────────────────────────────
+var OUTCOMES = [{
+  label: "Gatekeeper",
+  color: "#60A5FA"
+}, {
+  label: "Not In",
+  color: "#64748B"
+}, {
+  label: "Come Back",
+  color: "#FBBF24"
+}, {
+  label: "Interested",
+  color: "#A78BFA"
+}, {
+  label: "Booked Meeting",
+  color: "#34D399"
+}, {
+  label: "DNC",
+  color: "#EF4444"
+}];
+function LogTouchScreen(_ref8) {
+  var biz = _ref8.biz,
+    setBiz = _ref8.setBiz,
+    dm = _ref8.dm,
+    setDM = _ref8.setDM,
+    note = _ref8.note,
+    setNote = _ref8.setNote,
+    outcome = _ref8.outcome,
+    setOutcome = _ref8.setOutcome,
+    onSubmit = _ref8.onSubmit,
+    submitting = _ref8.submitting,
+    success = _ref8.success,
+    recentEntries = _ref8.recentEntries;
+  var ready = biz.trim() && outcome;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#0D1117",
+      minHeight: "100vh",
+      paddingBottom: 80,
+      fontFamily: "-apple-system,BlinkMacSystemFont,system-ui,sans-serif",
+      color: "#F1F5F9"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "max(env(safe-area-inset-top),20px) 16px 16px",
+      borderBottom: "1px solid #1A2335"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      fontWeight: 800,
+      letterSpacing: "0.14em",
+      color: "#F59E0B",
+      textTransform: "uppercase",
+      marginBottom: 3
+    }
+  }, "Bedrock Benefits"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 24,
+      fontWeight: 900,
+      letterSpacing: "-0.6px",
+      lineHeight: 1
+    }
+  }, "Log Touch")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "20px 16px 0"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      fontWeight: 800,
+      color: "#475569",
+      textTransform: "uppercase",
+      letterSpacing: "0.1em",
+      marginBottom: 6
+    }
+  }, "Business *"), /*#__PURE__*/React.createElement("input", {
+    value: biz,
+    onChange: function onChange(e) {
+      return setBiz(e.target.value);
+    },
+    placeholder: "Business name",
+    autoComplete: "off",
+    style: {
+      width: "100%",
+      background: "#1E293B",
+      border: "1px solid #2A3141",
+      borderRadius: 8,
+      padding: "12px 14px",
+      color: "#F1F5F9",
+      fontSize: 16,
+      outline: "none",
+      fontFamily: "inherit",
+      boxSizing: "border-box"
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      fontWeight: 800,
+      color: "#475569",
+      textTransform: "uppercase",
+      letterSpacing: "0.1em",
+      marginBottom: 6
+    }
+  }, "Owner / DM name ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#334155",
+      fontWeight: 400
+    }
+  }, "(optional)")), /*#__PURE__*/React.createElement("input", {
+    value: dm,
+    onChange: function onChange(e) {
+      return setDM(e.target.value);
+    },
+    placeholder: "If you got the name",
+    style: {
+      width: "100%",
+      background: "#1E293B",
+      border: "1px solid #2A3141",
+      borderRadius: 8,
+      padding: "12px 14px",
+      color: "#F1F5F9",
+      fontSize: 16,
+      outline: "none",
+      fontFamily: "inherit",
+      boxSizing: "border-box"
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      fontWeight: 800,
+      color: "#475569",
+      textTransform: "uppercase",
+      letterSpacing: "0.1em",
+      marginBottom: 10
+    }
+  }, "Outcome *"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 8
+    }
+  }, OUTCOMES.map(function (o) {
+    return /*#__PURE__*/React.createElement("button", {
+      key: o.label,
+      onPointerDown: function onPointerDown(e) {
+        e.preventDefault();
+        setOutcome(o.label);
+      },
+      style: {
+        padding: "14px 8px",
+        borderRadius: 10,
+        border: "2px solid",
+        borderColor: outcome === o.label ? o.color : "#1E293B",
+        background: outcome === o.label ? "".concat(o.color, "22") : "#131923",
+        color: outcome === o.label ? o.color : "#475569",
+        fontSize: 13,
+        fontWeight: 700,
+        cursor: "pointer",
+        transition: "all 0.12s",
+        WebkitTapHighlightColor: "transparent",
+        textAlign: "center"
+      }
+    }, o.label);
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 24
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      fontWeight: 800,
+      color: "#475569",
+      textTransform: "uppercase",
+      letterSpacing: "0.1em",
+      marginBottom: 6
+    }
+  }, "Quick note ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#334155",
+      fontWeight: 400
+    }
+  }, "(optional)")), /*#__PURE__*/React.createElement("input", {
+    value: note,
+    onChange: function onChange(e) {
+      return setNote(e.target.value);
+    },
+    placeholder: "Gatekeeper name, fleet size, callback time\u2026",
+    style: {
+      width: "100%",
+      background: "#1E293B",
+      border: "1px solid #2A3141",
+      borderRadius: 8,
+      padding: "12px 14px",
+      color: "#F1F5F9",
+      fontSize: 15,
+      outline: "none",
+      fontFamily: "inherit",
+      boxSizing: "border-box"
+    }
+  })), /*#__PURE__*/React.createElement("button", {
+    onPointerDown: function onPointerDown(e) {
+      e.preventDefault();
+      if (ready && !submitting) onSubmit();
+    },
+    disabled: !ready || submitting,
+    style: {
+      width: "100%",
+      padding: "16px 0",
+      borderRadius: 10,
+      border: "none",
+      background: ready ? "#F59E0B" : "#1E293B",
+      color: ready ? "#0D1117" : "#334155",
+      fontSize: 15,
+      fontWeight: 900,
+      cursor: ready ? "pointer" : "default",
+      transition: "all 0.15s",
+      WebkitTapHighlightColor: "transparent",
+      marginBottom: 8
+    }
+  }, submitting ? "Saving…" : "Log Touch"), success && /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      fontSize: 13,
+      color: "#34D399",
+      fontWeight: 700,
+      padding: "8px 0",
+      animation: "fadeIn 0.2s ease"
+    }
+  }, "\u2713 ", success), recentEntries.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 24
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      fontWeight: 800,
+      color: "#334155",
+      textTransform: "uppercase",
+      letterSpacing: "0.1em",
+      marginBottom: 10
+    }
+  }, "Logged today"), recentEntries.map(function (e) {
+    var _STAGES$e$stage;
+    return /*#__PURE__*/React.createElement("div", {
+      key: e.id,
+      style: {
+        background: "#131923",
+        borderRadius: 8,
+        padding: "10px 12px",
+        marginBottom: 6,
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderLeft: "3px solid ".concat(((_STAGES$e$stage = STAGES[e.stage]) === null || _STAGES$e$stage === void 0 ? void 0 : _STAGES$e$stage.color) || "#475569")
+      }
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        fontWeight: 700,
+        color: "#F1F5F9"
+      }
+    }, e.business), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 11,
+        color: "#475569"
+      }
+    }, e.nextAction || e.stage)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        color: "#334155"
+      }
+    }, "T", e.touchCount));
+  }))), /*#__PURE__*/React.createElement("style", null, "@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}"));
+}
+
 // ── ICP Status config ─────────────────────────────────────────────────────────
 var ICP = {
   "Qualified": {
@@ -1570,9 +1964,9 @@ var ICP = {
 var ICP_FILTERS = ["All", "Qualified", "Disqualified", "DNC Skip", "Client (Name-Drop)"];
 
 // ── Tab bar ───────────────────────────────────────────────────────────────────
-function TabBar(_ref8) {
-  var active = _ref8.active,
-    setActive = _ref8.setActive;
+function TabBar(_ref9) {
+  var active = _ref9.active,
+    setActive = _ref9.setActive;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       position: "fixed",
@@ -1589,6 +1983,10 @@ function TabBar(_ref8) {
     id: "pipeline",
     label: "Pipeline",
     icon: "◈"
+  }, {
+    id: "log",
+    label: "Log Touch",
+    icon: "⊕"
   }, {
     id: "prospects",
     label: "Prospects",
@@ -1628,19 +2026,19 @@ function TabBar(_ref8) {
 }
 
 // ── Prospect Log Screen ───────────────────────────────────────────────────────
-function ProspectLogScreen(_ref9) {
-  var prospects = _ref9.prospects,
-    syncing = _ref9.syncing,
-    syncMsg = _ref9.syncMsg,
-    onSync = _ref9.onSync,
-    search = _ref9.search,
-    setSearch = _ref9.setSearch,
-    filterStatus = _ref9.filterStatus,
-    setFilterStatus = _ref9.setFilterStatus,
-    filterZip = _ref9.filterZip,
-    setFilterZip = _ref9.setFilterZip,
-    expanded = _ref9.expanded,
-    setExpanded = _ref9.setExpanded;
+function ProspectLogScreen(_ref0) {
+  var prospects = _ref0.prospects,
+    syncing = _ref0.syncing,
+    syncMsg = _ref0.syncMsg,
+    onSync = _ref0.onSync,
+    search = _ref0.search,
+    setSearch = _ref0.setSearch,
+    filterStatus = _ref0.filterStatus,
+    setFilterStatus = _ref0.setFilterStatus,
+    filterZip = _ref0.filterZip,
+    setFilterZip = _ref0.setFilterZip,
+    expanded = _ref0.expanded,
+    setExpanded = _ref0.setExpanded;
   // Unique ZIPs for filter
   var zips = ["All"].concat(_toConsumableArray(Array.from(new Set(prospects.map(function (p) {
     return p['ZIP'];
@@ -1870,10 +2268,10 @@ function ProspectLogScreen(_ref9) {
 }
 
 // ── Prospect Card ─────────────────────────────────────────────────────────────
-function ProspectCard(_ref0) {
-  var p = _ref0.prospect,
-    expanded = _ref0.expanded,
-    onToggle = _ref0.onToggle;
+function ProspectCard(_ref1) {
+  var p = _ref1.prospect,
+    expanded = _ref1.expanded,
+    onToggle = _ref1.onToggle;
   var status = p['ICP Status'] || 'Qualified';
   var icp = ICP[status] || ICP['Qualified'];
   return /*#__PURE__*/React.createElement("div", {
@@ -2011,9 +2409,9 @@ var CORRECT_PIN = "5280"; // ← change this to your preferred PIN
 var SESSION_KEY = "aflac:unlocked";
 var SESSION_HRS = 8; // auto-lock after 8 hours
 
-function PinGate(_ref1) {
-  var children = _ref1.children;
-  var _useState37 = useState(function () {
+function PinGate(_ref10) {
+  var children = _ref10.children;
+  var _useState49 = useState(function () {
       try {
         var ts = sessionStorage.getItem(SESSION_KEY);
         if (!ts) return false;
@@ -2022,17 +2420,17 @@ function PinGate(_ref1) {
         return false;
       }
     }),
-    _useState38 = _slicedToArray(_useState37, 2),
-    unlocked = _useState38[0],
-    setUnlocked = _useState38[1];
-  var _useState39 = useState(""),
-    _useState40 = _slicedToArray(_useState39, 2),
-    input = _useState40[0],
-    setInput = _useState40[1];
-  var _useState41 = useState(false),
-    _useState42 = _slicedToArray(_useState41, 2),
-    shake = _useState42[0],
-    setShake = _useState42[1];
+    _useState50 = _slicedToArray(_useState49, 2),
+    unlocked = _useState50[0],
+    setUnlocked = _useState50[1];
+  var _useState51 = useState(""),
+    _useState52 = _slicedToArray(_useState51, 2),
+    input = _useState52[0],
+    setInput = _useState52[1];
+  var _useState53 = useState(false),
+    _useState54 = _slicedToArray(_useState53, 2),
+    shake = _useState54[0],
+    setShake = _useState54[1];
   function press(d) {
     if (shake) return;
     var next = input + d;
