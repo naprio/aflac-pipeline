@@ -53,60 +53,60 @@ function syncToDrive(_x, _x2) {
   return _syncToDrive.apply(this, arguments);
 }
 function _syncToDrive() {
-  _syncToDrive = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(action, payload) {
-    var body, _t2;
-    return _regenerator().w(function (_context6) {
-      while (1) switch (_context6.p = _context6.n) {
+  _syncToDrive = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(action, payload) {
+    var body, _t3;
+    return _regenerator().w(function (_context7) {
+      while (1) switch (_context7.p = _context7.n) {
         case 0:
-          _context6.p = 0;
+          _context7.p = 0;
           body = new URLSearchParams();
           body.append("payload", JSON.stringify(_objectSpread({
             action: action
           }, payload)));
-          _context6.n = 1;
+          _context7.n = 1;
           return fetch(WEBHOOK, {
             method: "POST",
             mode: "no-cors",
             body: body
           });
         case 1:
-          _context6.n = 3;
+          _context7.n = 3;
           break;
         case 2:
-          _context6.p = 2;
-          _t2 = _context6.v;
-          console.warn("Drive sync failed:", _t2);
+          _context7.p = 2;
+          _t3 = _context7.v;
+          console.warn("Drive sync failed:", _t3);
         case 3:
-          return _context6.a(2);
+          return _context7.a(2);
       }
-    }, _callee6, null, [[0, 2]]);
+    }, _callee7, null, [[0, 2]]);
   }));
   return _syncToDrive.apply(this, arguments);
 }
 function fetchFromDrive() {
   return _fetchFromDrive.apply(this, arguments);
-} // ── Local storage (replaces window.storage) ───────────────────────────────────
+} // ── Prospect log fetch ────────────────────────────────────────────────────────
 function _fetchFromDrive() {
-  _fetchFromDrive = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7() {
+  _fetchFromDrive = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8() {
     var res, json;
-    return _regenerator().w(function (_context7) {
-      while (1) switch (_context7.n) {
+    return _regenerator().w(function (_context8) {
+      while (1) switch (_context8.n) {
         case 0:
-          _context7.n = 1;
+          _context8.n = 1;
           return fetch(WEBHOOK + "?action=read");
         case 1:
-          res = _context7.v;
-          _context7.n = 2;
+          res = _context8.v;
+          _context8.n = 2;
           return res.json();
         case 2:
-          json = _context7.v;
+          json = _context8.v;
           if (!(!json.ok || !json.data)) {
-            _context7.n = 3;
+            _context8.n = 3;
             break;
           }
           throw new Error(json.error || "No data");
         case 3:
-          return _context7.a(2, json.data.map(function (row, i) {
+          return _context8.a(2, json.data.map(function (row, i) {
             return {
               id: "sheet-".concat((row['Business'] || '').toLowerCase().replace(/[^a-z0-9]/g, '-'), "-").concat(row['ZIP'] || i),
               business: row['Business'] || '',
@@ -125,9 +125,40 @@ function _fetchFromDrive() {
             return e.business.trim();
           }));
       }
-    }, _callee7);
+    }, _callee8);
   }));
   return _fetchFromDrive.apply(this, arguments);
+}
+function fetchProspectLog() {
+  return _fetchProspectLog.apply(this, arguments);
+} // ── Local storage (replaces window.storage) ───────────────────────────────────
+function _fetchProspectLog() {
+  _fetchProspectLog = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9() {
+    var res, json;
+    return _regenerator().w(function (_context9) {
+      while (1) switch (_context9.n) {
+        case 0:
+          _context9.n = 1;
+          return fetch(WEBHOOK + "?action=read_prospects");
+        case 1:
+          res = _context9.v;
+          _context9.n = 2;
+          return res.json();
+        case 2:
+          json = _context9.v;
+          if (!(!json.ok || !json.data)) {
+            _context9.n = 3;
+            break;
+          }
+          throw new Error(json.error || "No data");
+        case 3:
+          return _context9.a(2, json.data.filter(function (r) {
+            return r['Business'];
+          }));
+      }
+    }, _callee9);
+  }));
+  return _fetchProspectLog.apply(this, arguments);
 }
 function lsGet(key) {
   try {
@@ -532,10 +563,42 @@ function App() {
     _useState18 = _slicedToArray(_useState17, 2),
     syncMsg = _useState18[0],
     setSyncMsg = _useState18[1];
-  var _useState19 = useState(null),
+  var _useState19 = useState('pipeline'),
     _useState20 = _slicedToArray(_useState19, 2),
-    form = _useState20[0],
-    setForm = _useState20[1];
+    activeTab = _useState20[0],
+    setActiveTab = _useState20[1];
+  var _useState21 = useState([]),
+    _useState22 = _slicedToArray(_useState21, 2),
+    prospects = _useState22[0],
+    setProspects = _useState22[1];
+  var _useState23 = useState(false),
+    _useState24 = _slicedToArray(_useState23, 2),
+    prospectSync = _useState24[0],
+    setProspectSync = _useState24[1];
+  var _useState25 = useState(''),
+    _useState26 = _slicedToArray(_useState25, 2),
+    pSyncMsg = _useState26[0],
+    setPSyncMsg = _useState26[1];
+  var _useState27 = useState(''),
+    _useState28 = _slicedToArray(_useState27, 2),
+    pSearch = _useState28[0],
+    setPSearch = _useState28[1];
+  var _useState29 = useState('All'),
+    _useState30 = _slicedToArray(_useState29, 2),
+    pFilterStatus = _useState30[0],
+    setPFilterStatus = _useState30[1];
+  var _useState31 = useState('All'),
+    _useState32 = _slicedToArray(_useState31, 2),
+    pFilterZip = _useState32[0],
+    setPFilterZip = _useState32[1];
+  var _useState33 = useState(null),
+    _useState34 = _slicedToArray(_useState33, 2),
+    pExpanded = _useState34[0],
+    setPExpanded = _useState34[1];
+  var _useState35 = useState(null),
+    _useState36 = _slicedToArray(_useState35, 2),
+    form = _useState36[0],
+    setForm = _useState36[1];
   useEffect(function () {
     var r = lsGet("aflac:pipeline");
     setEntries(r ? JSON.parse(r.value) : SEED);
@@ -607,18 +670,62 @@ function App() {
     }));
     return _saveForm.apply(this, arguments);
   }
+  function handleProspectSync() {
+    return _handleProspectSync.apply(this, arguments);
+  } // Load prospects from localStorage on mount
+  function _handleProspectSync() {
+    _handleProspectSync = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      var data, _t;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.p = _context3.n) {
+          case 0:
+            setProspectSync(true);
+            setPSyncMsg('');
+            _context3.p = 1;
+            _context3.n = 2;
+            return fetchProspectLog();
+          case 2:
+            data = _context3.v;
+            lsSet("aflac:prospects", JSON.stringify(data));
+            setProspects(data);
+            setPSyncMsg("Synced ".concat(data.length, " prospects from Drive"));
+            setTimeout(function () {
+              return setPSyncMsg('');
+            }, 3000);
+            _context3.n = 4;
+            break;
+          case 3:
+            _context3.p = 3;
+            _t = _context3.v;
+            setPSyncMsg('Sync failed — check connection');
+            setTimeout(function () {
+              return setPSyncMsg('');
+            }, 3000);
+          case 4:
+            setProspectSync(false);
+          case 5:
+            return _context3.a(2);
+        }
+      }, _callee3, null, [[1, 3]]);
+    }));
+    return _handleProspectSync.apply(this, arguments);
+  }
+  useEffect(function () {
+    var r = lsGet("aflac:prospects");
+    if (r) setProspects(JSON.parse(r.value));
+  }, []);
   function deleteEntry() {
     return _deleteEntry.apply(this, arguments);
   }
   function _deleteEntry() {
-    _deleteEntry = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
-      return _regenerator().w(function (_context3) {
-        while (1) switch (_context3.n) {
+    _deleteEntry = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
           case 0:
             syncToDrive("delete", {
               business: form.business
             });
-            _context3.n = 1;
+            _context4.n = 1;
             return persist(entries.filter(function (e) {
               return e.id !== form.id;
             }));
@@ -626,9 +733,9 @@ function App() {
             setModal(null);
             setForm(null);
           case 2:
-            return _context3.a(2);
+            return _context4.a(2);
         }
-      }, _callee3);
+      }, _callee4);
     }));
     return _deleteEntry.apply(this, arguments);
   }
@@ -636,29 +743,29 @@ function App() {
     return _handleSync.apply(this, arguments);
   }
   function _handleSync() {
-    _handleSync = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
-      var fresh, _t;
-      return _regenerator().w(function (_context4) {
-        while (1) switch (_context4.p = _context4.n) {
+    _handleSync = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
+      var fresh, _t2;
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.p = _context5.n) {
           case 0:
             setSyncing(true);
             setSyncMsg('');
-            _context4.p = 1;
-            _context4.n = 2;
+            _context5.p = 1;
+            _context5.n = 2;
             return fetchFromDrive();
           case 2:
-            fresh = _context4.v;
+            fresh = _context5.v;
             lsSet("aflac:pipeline", JSON.stringify(fresh));
             setEntries(fresh);
             setSyncMsg("Synced ".concat(fresh.length, " entries from Drive"));
             setTimeout(function () {
               return setSyncMsg('');
             }, 3000);
-            _context4.n = 4;
+            _context5.n = 4;
             break;
           case 3:
-            _context4.p = 3;
-            _t = _context4.v;
+            _context5.p = 3;
+            _t2 = _context5.v;
             setSyncMsg('Sync failed — check connection');
             setTimeout(function () {
               return setSyncMsg('');
@@ -666,9 +773,9 @@ function App() {
           case 4:
             setSyncing(false);
           case 5:
-            return _context4.a(2);
+            return _context5.a(2);
         }
-      }, _callee4, null, [[1, 3]]);
+      }, _callee5, null, [[1, 3]]);
     }));
     return _handleSync.apply(this, arguments);
   }
@@ -676,10 +783,10 @@ function App() {
     return _addTouch.apply(this, arguments);
   }
   function _addTouch() {
-    _addTouch = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(id, ev) {
+    _addTouch = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(id, ev) {
       var updated, changed;
-      return _regenerator().w(function (_context5) {
-        while (1) switch (_context5.n) {
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.n) {
           case 0:
             ev.stopPropagation();
             updated = entries.map(function (e) {
@@ -691,12 +798,12 @@ function App() {
             changed = updated.find(function (e) {
               return e.id === id;
             });
-            _context5.n = 1;
+            _context6.n = 1;
             return persist(updated, changed);
           case 1:
-            return _context5.a(2);
+            return _context6.a(2);
         }
-      }, _callee5);
+      }, _callee6);
     }));
     return _addTouch.apply(this, arguments);
   }
@@ -742,7 +849,7 @@ function App() {
       fontSize: 15
     }
   }, "Loading\u2026"));
-  return /*#__PURE__*/React.createElement("div", {
+  var screen = activeTab === 'pipeline' ? /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#0D1117",
       minHeight: "100vh",
@@ -954,7 +1061,32 @@ function App() {
       setModal(null);
       setForm(null);
     }
-  }), /*#__PURE__*/React.createElement("style", null, "@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}"));
+  }), /*#__PURE__*/React.createElement("style", null, "@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}")) :
+  /*#__PURE__*/
+  // ── Prospect Log screen ─────────────────────────────────────────────────
+  React.createElement(ProspectLogScreen, {
+    prospects: prospects,
+    syncing: prospectSync,
+    syncMsg: pSyncMsg,
+    onSync: handleProspectSync,
+    search: pSearch,
+    setSearch: setPSearch,
+    filterStatus: pFilterStatus,
+    setFilterStatus: setPFilterStatus,
+    filterZip: pFilterZip,
+    setFilterZip: setPFilterZip,
+    expanded: pExpanded,
+    setExpanded: setPExpanded
+  });
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#0D1117",
+      minHeight: "100vh"
+    }
+  }, screen, /*#__PURE__*/React.createElement(TabBar, {
+    active: activeTab,
+    setActive: setActiveTab
+  }));
 }
 function Stat(_ref) {
   var label = _ref.label,
@@ -1416,14 +1548,472 @@ function F(_ref7) {
   }, label), children);
 }
 
+// ── ICP Status config ─────────────────────────────────────────────────────────
+var ICP = {
+  "Qualified": {
+    color: "#34D399",
+    bg: "rgba(52,211,153,0.15)"
+  },
+  "Disqualified": {
+    color: "#EF4444",
+    bg: "rgba(239,68,68,0.15)"
+  },
+  "DNC Skip": {
+    color: "#64748B",
+    bg: "rgba(100,116,139,0.15)"
+  },
+  "Client (Name-Drop)": {
+    color: "#F59E0B",
+    bg: "rgba(245,158,11,0.15)"
+  }
+};
+var ICP_FILTERS = ["All", "Qualified", "Disqualified", "DNC Skip", "Client (Name-Drop)"];
+
+// ── Tab bar ───────────────────────────────────────────────────────────────────
+function TabBar(_ref8) {
+  var active = _ref8.active,
+    setActive = _ref8.setActive;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "fixed",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      zIndex: 50,
+      background: "#0D1117",
+      borderTop: "1px solid #1A2335",
+      display: "flex",
+      paddingBottom: "env(safe-area-inset-bottom)"
+    }
+  }, [{
+    id: "pipeline",
+    label: "Pipeline",
+    icon: "◈"
+  }, {
+    id: "prospects",
+    label: "Prospects",
+    icon: "⊞"
+  }].map(function (tab) {
+    return /*#__PURE__*/React.createElement("button", {
+      key: tab.id,
+      onClick: function onClick() {
+        return setActive(tab.id);
+      },
+      style: {
+        flex: 1,
+        padding: "10px 0 8px",
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 3
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 18,
+        color: active === tab.id ? "#F59E0B" : "#334155"
+      }
+    }, tab.icon), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 9,
+        fontWeight: 700,
+        letterSpacing: "0.06em",
+        textTransform: "uppercase",
+        color: active === tab.id ? "#F59E0B" : "#334155"
+      }
+    }, tab.label));
+  }));
+}
+
+// ── Prospect Log Screen ───────────────────────────────────────────────────────
+function ProspectLogScreen(_ref9) {
+  var prospects = _ref9.prospects,
+    syncing = _ref9.syncing,
+    syncMsg = _ref9.syncMsg,
+    onSync = _ref9.onSync,
+    search = _ref9.search,
+    setSearch = _ref9.setSearch,
+    filterStatus = _ref9.filterStatus,
+    setFilterStatus = _ref9.setFilterStatus,
+    filterZip = _ref9.filterZip,
+    setFilterZip = _ref9.setFilterZip,
+    expanded = _ref9.expanded,
+    setExpanded = _ref9.setExpanded;
+  // Unique ZIPs for filter
+  var zips = ["All"].concat(_toConsumableArray(Array.from(new Set(prospects.map(function (p) {
+    return p['ZIP'];
+  }).filter(Boolean))).sort()));
+  var visible = prospects.filter(function (p) {
+    if (filterStatus !== "All" && p['ICP Status'] !== filterStatus) return false;
+    if (filterZip !== "All" && p['ZIP'] !== filterZip) return false;
+    if (search) {
+      var q = search.toLowerCase();
+      return (p['Business'] || '').toLowerCase().includes(q) || (p['DM'] || '').toLowerCase().includes(q) || (p['Address'] || '').toLowerCase().includes(q);
+    }
+    return true;
+  }).sort(function (a, b) {
+    // Sort newest first
+    var da = a['Date Added'] || '';
+    var db = b['Date Added'] || '';
+    return db.localeCompare(da);
+  });
+  var qualCount = prospects.filter(function (p) {
+    return p['ICP Status'] === 'Qualified';
+  }).length;
+  var dncCount = prospects.filter(function (p) {
+    return p['ICP Status'] === 'DNC Skip';
+  }).length;
+  var clientCount = prospects.filter(function (p) {
+    return p['ICP Status'] === 'Client (Name-Drop)';
+  }).length;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#0D1117",
+      minHeight: "100vh",
+      paddingBottom: 80,
+      fontFamily: "-apple-system,BlinkMacSystemFont,system-ui,sans-serif",
+      color: "#F1F5F9"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "max(env(safe-area-inset-top),20px) 16px 0 16px",
+      borderBottom: "1px solid #1A2335"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      fontWeight: 800,
+      letterSpacing: "0.14em",
+      color: "#F59E0B",
+      textTransform: "uppercase",
+      marginBottom: 3
+    }
+  }, "Bedrock Benefits"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 24,
+      fontWeight: 900,
+      color: "#F1F5F9",
+      letterSpacing: "-0.6px",
+      lineHeight: 1
+    }
+  }, "Prospects")), /*#__PURE__*/React.createElement("button", {
+    onClick: onSync,
+    disabled: syncing,
+    style: {
+      background: "transparent",
+      color: syncing ? "#334155" : "#64748B",
+      border: "1px solid #1E293B",
+      borderRadius: 8,
+      padding: "9px 14px",
+      fontSize: 12,
+      fontWeight: 700,
+      cursor: syncing ? "default" : "pointer"
+    }
+  }, syncing ? "Syncing…" : "↓ Sync")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 20,
+      paddingBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement(Stat, {
+    label: "Total",
+    value: prospects.length,
+    color: "#60A5FA"
+  }), /*#__PURE__*/React.createElement(Stat, {
+    label: "Qualified",
+    value: qualCount,
+    color: "#34D399"
+  }), /*#__PURE__*/React.createElement(Stat, {
+    label: "Clients",
+    value: clientCount,
+    color: "#F59E0B"
+  }), /*#__PURE__*/React.createElement(Stat, {
+    label: "DNC",
+    value: dncCount,
+    color: "#64748B"
+  })), syncMsg && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: syncMsg.includes('failed') ? '#EF4444' : '#34D399',
+      paddingBottom: 10,
+      textAlign: 'center'
+    }
+  }, syncMsg)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "12px 16px 0"
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    placeholder: "Search business, DM, address\u2026",
+    value: search,
+    onChange: function onChange(e) {
+      return setSearch(e.target.value);
+    },
+    style: {
+      width: "100%",
+      background: "#1E293B",
+      border: "1px solid #2A3141",
+      borderRadius: 8,
+      padding: "9px 12px",
+      color: "#F1F5F9",
+      fontSize: 13,
+      outline: "none",
+      fontFamily: "inherit",
+      boxSizing: "border-box",
+      marginBottom: 10
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6,
+      overflowX: "auto",
+      paddingBottom: 8,
+      scrollbarWidth: "none"
+    }
+  }, ICP_FILTERS.map(function (s) {
+    var _ICP$s, _ICP$s2;
+    return /*#__PURE__*/React.createElement("button", {
+      key: s,
+      onClick: function onClick() {
+        return setFilterStatus(s);
+      },
+      style: {
+        background: filterStatus === s ? ((_ICP$s = ICP[s]) === null || _ICP$s === void 0 ? void 0 : _ICP$s.color) || "#94A3B8" : "transparent",
+        color: filterStatus === s ? "#0D1117" : "#475569",
+        border: "1px solid ".concat(filterStatus === s ? ((_ICP$s2 = ICP[s]) === null || _ICP$s2 === void 0 ? void 0 : _ICP$s2.color) || "#94A3B8" : "#1E293B"),
+        borderRadius: 20,
+        padding: "4px 11px",
+        fontSize: 10,
+        fontWeight: 700,
+        cursor: "pointer",
+        whiteSpace: "nowrap",
+        flexShrink: 0
+      }
+    }, s);
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6,
+      overflowX: "auto",
+      paddingBottom: 10,
+      scrollbarWidth: "none"
+    }
+  }, zips.map(function (z) {
+    return /*#__PURE__*/React.createElement("button", {
+      key: z,
+      onClick: function onClick() {
+        return setFilterZip(z);
+      },
+      style: {
+        background: filterZip === z ? "#60A5FA" : "transparent",
+        color: filterZip === z ? "#0D1117" : "#475569",
+        border: "1px solid ".concat(filterZip === z ? "#60A5FA" : "#1E293B"),
+        borderRadius: 20,
+        padding: "4px 11px",
+        fontSize: 10,
+        fontWeight: 700,
+        cursor: "pointer",
+        whiteSpace: "nowrap",
+        flexShrink: 0
+      }
+    }, z);
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "0 16px 8px",
+      fontSize: 11,
+      color: "#475569"
+    }
+  }, visible.length, " showing"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "0 16px"
+    }
+  }, prospects.length === 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      padding: "48px 16px",
+      color: "#334155"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 32,
+      marginBottom: 12
+    }
+  }, "\u229E"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      marginBottom: 6
+    }
+  }, "No prospects yet"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: "#1E293B"
+    }
+  }, "Run the aflac-dm-lookup skill then tap \u2193 Sync")), visible.map(function (p) {
+    return /*#__PURE__*/React.createElement(ProspectCard, {
+      key: "".concat(p['Business'], "-").concat(p['ZIP']),
+      prospect: p,
+      expanded: expanded === "".concat(p['Business'], "-").concat(p['ZIP']),
+      onToggle: function onToggle() {
+        var key = "".concat(p['Business'], "-").concat(p['ZIP']);
+        setExpanded(expanded === key ? null : key);
+      }
+    });
+  })));
+}
+
+// ── Prospect Card ─────────────────────────────────────────────────────────────
+function ProspectCard(_ref0) {
+  var p = _ref0.prospect,
+    expanded = _ref0.expanded,
+    onToggle = _ref0.onToggle;
+  var status = p['ICP Status'] || 'Qualified';
+  var icp = ICP[status] || ICP['Qualified'];
+  return /*#__PURE__*/React.createElement("div", {
+    onClick: onToggle,
+    style: {
+      background: "#131923",
+      borderRadius: 10,
+      marginBottom: 7,
+      border: "1px solid #1A2335",
+      borderLeft: "4px solid ".concat(icp.color),
+      cursor: "pointer",
+      overflow: "hidden"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "12px 12px 10px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      minWidth: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 15,
+      fontWeight: 700,
+      color: "#F1F5F9",
+      marginBottom: 1,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap"
+    }
+  }, p['Business']), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: "#64748B",
+      marginBottom: 6
+    }
+  }, p['DM'] || "Owner unknown", p['Phone'] ? " \xB7 ".concat(p['Phone']) : ""), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: "#475569",
+      marginBottom: 6
+    }
+  }, p['Address'] || "Address unknown"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 5,
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Badge, {
+    bg: icp.bg,
+    color: icp.color
+  }, status), p['ZIP'] && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      color: "#334155",
+      fontWeight: 600
+    }
+  }, p['ZIP']), p['Industry'] && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      color: "#475569"
+    }
+  }, p['Industry']), p['Est. Employees'] && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      color: "#334155"
+    }
+  }, "~", p['Est. Employees'], " emp"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "right",
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: "#334155",
+      marginBottom: 2
+    }
+  }, p['Date Added'] || ""), p['Partner'] && p['Partner'] !== 'Solo' && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: "#60A5FA",
+      fontWeight: 600
+    }
+  }, "w/", p['Partner'])))), expanded && /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderTop: "1px solid #1A2335",
+      padding: "10px 12px"
+    },
+    onClick: function onClick(e) {
+      return e.stopPropagation();
+    }
+  }, p['DQ Reason'] && /*#__PURE__*/React.createElement(Sec, {
+    label: "DQ Reason",
+    color: "#EF4444"
+  }, p['DQ Reason']), p['Notes'] && /*#__PURE__*/React.createElement(Sec, {
+    label: "Notes",
+    color: "#475569"
+  }, p['Notes']), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 12,
+      flexWrap: "wrap",
+      marginTop: 4
+    }
+  }, p['Phone'] && /*#__PURE__*/React.createElement("a", {
+    href: "tel:".concat(p['Phone']),
+    style: {
+      background: "#F59E0B",
+      color: "#0D1117",
+      borderRadius: 7,
+      padding: "8px 16px",
+      fontSize: 12,
+      fontWeight: 700,
+      textDecoration: "none"
+    },
+    onClick: function onClick(e) {
+      return e.stopPropagation();
+    }
+  }, "Call ", p['Phone']))));
+}
+
 // ── PIN Gate ──────────────────────────────────────────────────────────────────
 var CORRECT_PIN = "5280"; // ← change this to your preferred PIN
 var SESSION_KEY = "aflac:unlocked";
 var SESSION_HRS = 8; // auto-lock after 8 hours
 
-function PinGate(_ref8) {
-  var children = _ref8.children;
-  var _useState21 = useState(function () {
+function PinGate(_ref1) {
+  var children = _ref1.children;
+  var _useState37 = useState(function () {
       try {
         var ts = sessionStorage.getItem(SESSION_KEY);
         if (!ts) return false;
@@ -1432,17 +2022,17 @@ function PinGate(_ref8) {
         return false;
       }
     }),
-    _useState22 = _slicedToArray(_useState21, 2),
-    unlocked = _useState22[0],
-    setUnlocked = _useState22[1];
-  var _useState23 = useState(""),
-    _useState24 = _slicedToArray(_useState23, 2),
-    input = _useState24[0],
-    setInput = _useState24[1];
-  var _useState25 = useState(false),
-    _useState26 = _slicedToArray(_useState25, 2),
-    shake = _useState26[0],
-    setShake = _useState26[1];
+    _useState38 = _slicedToArray(_useState37, 2),
+    unlocked = _useState38[0],
+    setUnlocked = _useState38[1];
+  var _useState39 = useState(""),
+    _useState40 = _slicedToArray(_useState39, 2),
+    input = _useState40[0],
+    setInput = _useState40[1];
+  var _useState41 = useState(false),
+    _useState42 = _slicedToArray(_useState41, 2),
+    shake = _useState42[0],
+    setShake = _useState42[1];
   function press(d) {
     if (shake) return;
     var next = input + d;
