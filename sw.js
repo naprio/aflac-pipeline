@@ -1,5 +1,5 @@
 // Aflac Pipeline — Service Worker
-const CACHE = 'aflac-pipeline-v1';
+const CACHE = 'aflac-pipeline-v2';
 const ASSETS = [
   './',
   './index.html',
