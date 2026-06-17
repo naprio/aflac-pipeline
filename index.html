@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#F59E0B">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Aflac Pipeline">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <title>Aflac Pipeline</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { background: #0D1117; color: #F1F5F9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; overscroll-behavior: none; }
+    ::-webkit-scrollbar { display: none; }
+    input, select, textarea { -webkit-appearance: none; border-radius: 8px; }
+    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.5); }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect } = React;
+
+// ── Drive sync ────────────────────────────────────────────────────────────────
+const WEBHOOK = "https://script.google.com/macros/s/AKfycbyPD2zoSV74sxFE4QEu4nMwQlKr0kQAyJCgxNIs4Ko4bXQpZ8B3j2FgsQ7Ucz6r6S_nkA/exec";
+
+async function syncToDrive(action, payload) {
+  try {
+    const body = new URLSearchParams();
+    body.append("payload", JSON.stringify({ action, ...payload }));
+    await fetch(WEBHOOK, { method: "POST", mode: "no-cors", body });
+  } catch(e) { console.warn("Drive sync failed:", e); }
+}
+
+// ── Local storage (replaces window.storage) ───────────────────────────────────
+function lsGet(key) {
+  try { const v = localStorage.getItem(key); return v ? { value: v } : null; } catch { return null; }
+}
+function lsSet(key, val) {
+  try { localStorage.setItem(key, val); return true; } catch { return false; }
+}
+
+// ── Stage config ──────────────────────────────────────────────────────────────
+const STAGES = {
+  Cold:          { color: "#64748B", bg: "rgba(100,116,139,0.15)" },
+  Approached:    { color: "#60A5FA", bg: "rgba(96,165,250,0.15)"  },
+  Warm:          { color: "#FBBF24", bg: "rgba(251,191,36,0.15)"  },
+  "Meeting Set": { color: "#A78BFA", bg: "rgba(167,139,250,0.15)" },
+  Presented:     { color: "#FB923C", bg: "rgba(251,146,60,0.15)"  },
+  Enrolled:      { color: "#34D399", bg: "rgba(52,211,153,0.15)"  },
+  Client:        { color: "#10B981", bg: "rgba(16,185,129,0.2)"   },
+  Dead:          { color: "#6B7280", bg: "rgba(107,114,128,0.1)"  },
+};
+const STAGE_NAMES = Object.keys(STAGES);
+const PARTNERS = ["Solo","Maylene","Gianni","Oscar","Brad","RJ","Argie","Archie"];
+const FILTER_STAGES = ["All","Meeting Set","Warm","Approached","Presented","Enrolled"];
+
+// ── Urgency ───────────────────────────────────────────────────────────────────
+function getUrgency(returnDate) {
+  if (!returnDate) return { label: "—", color: "#475569", days: 9999, pulse: false };
+  const today = new Date(); today.setHours(0,0,0,0);
+  const ret = new Date(returnDate + "T00:00:00");
+  const diff = Math.round((ret - today) / 86400000);
+  if (diff < 0)   return { label: `${Math.abs(diff)}d late`, color: "#EF4444", days: diff, pulse: true  };
+  if (diff === 0) return { label: "Today",                   color: "#F59E0B", days: 0,    pulse: true  };
+  if (diff <= 3)  return { label: `${diff}d`,                color: "#F59E0B", days: diff, pulse: false };
+  if (diff <= 7)  return { label: `${diff}d`,                color: "#84CC16", days: diff, pulse: false };
+  return              { label: `${diff}d`,                   color: "#22C55E", days: diff, pulse: false };
+}
+
+function sortByUrgency(arr) {
+  return [...arr].sort((a,b) => getUrgency(a.returnDate).days - getUrgency(b.returnDate).days);
+}
+
+// ── Seed data ─────────────────────────────────────────────────────────────────
+const SEED = [
+  { id:"s1",  business:"Gorilla Demolition",           dm:"Ashley Hill / TJ", phone:"",             zip:"80110", stage:"Approached",   touchCount:1, lastContact:"2026-06-14", partner:"Solo",  notes:"TJ in shop when garage door open. Guard dogs Lucy + Rocky on-site.",                         returnDate:"2026-06-16", nextAction:"Return in person" },
+  { id:"s2",  business:"Rocky Mountain Concrete",      dm:"Greg Johnson",     phone:"",             zip:"80110", stage:"Warm",         touchCount:2, lastContact:"2026-06-12", partner:"Solo",  notes:"Available 6–6:30 AM only. Needs spousal buy-in. Prior Aflac attempt failed.",               returnDate:"2026-06-16", nextAction:"Call to schedule" },
+  { id:"s3",  business:"Restorative Justice",          dm:"Debra Dorsey",     phone:"720-913-9125", zip:"80223", stage:"Approached",   touchCount:1, lastContact:"2026-06-14", partner:"Solo",  notes:"Call attempted, moved to 6/16.",                                                             returnDate:"2026-06-16", nextAction:"Call" },
+  { id:"s4",  business:"Miss Jen's Munchkins",         dm:"Jen",              phone:"",             zip:"80120", stage:"Warm",         touchCount:1, lastContact:"2026-06-15", partner:"Solo",  notes:"Referral from Angela Haydusky. Email sent. Slots: 6/17 8:30 AM or 6/18 4 PM.",              returnDate:"2026-06-17", nextAction:"Confirm meeting" },
+  { id:"s5",  business:"Pioneer Granite & Quartz",     dm:"Linda",            phone:"",             zip:"80134", stage:"Warm",         touchCount:2, lastContact:"2026-06-14", partner:"Solo",  notes:"Friendly gatekeeper completed scheduling form. Awaiting callback.",                          returnDate:"2026-06-17", nextAction:"Await / follow up" },
+  { id:"s6",  business:"Concrete Solutions",           dm:"Kenny",            phone:"",             zip:"80110", stage:"Warm",         touchCount:2, lastContact:"2026-06-12", partner:"Solo",  notes:"Connected via prior lead elevation handout.",                                                returnDate:"2026-06-18", nextAction:"Follow up if no word" },
+  { id:"s7",  business:"Red Hawk Roofing",             dm:"Ciera Muniz",      phone:"",             zip:"80134", stage:"Warm",         touchCount:2, lastContact:"2026-06-14", partner:"Solo",  notes:"Young team. GI life + disability/accident pairing generated interest.",                     returnDate:"2026-06-18", nextAction:"Await callback" },
+  { id:"s8",  business:"Luxury Auto Works",            dm:"Aaron",            phone:"",             zip:"80112", stage:"Warm",         touchCount:2, lastContact:"2026-06-10", partner:"Solo",  notes:"Intro pending to Angela Haydusky (health) and Victor/GiveAccor (marketing).",               returnDate:"2026-06-20", nextAction:"Make introductions" },
+  { id:"s9",  business:"Gold Standard Collision",      dm:"Andy",             phone:"",             zip:"80110", stage:"Meeting Set",  touchCount:3, lastContact:"2026-06-12", partner:"Solo",  notes:"Group benefits. Coordinating with Angela Haydusky on enrollment timeline.",                  returnDate:"2026-06-22", nextAction:"Coordinate with Angela" },
+  { id:"s10", business:"Denex / GiveAccor",            dm:"Victor",           phone:"",             zip:"80112", stage:"Meeting Set",  touchCount:3, lastContact:"2026-06-14", partner:"Solo",  notes:"Discovery Zoom June 24 at 7 PM. Victor also owns GiveAccor (auto body marketing).",         returnDate:"2026-06-24", nextAction:"Zoom discovery meeting" },
+  { id:"s11", business:"Trice Jewelers",               dm:"Jane Mora",        phone:"303-759-9661", zip:"80222", stage:"Approached",   touchCount:1, lastContact:"2026-06-10", partner:"Archie",notes:"Tied to next walk with Archie.",                                                             returnDate:"",           nextAction:"Next walk with Archie" },
+  { id:"s12", business:"Angel's Installations",       dm:"Angel",            phone:"",             zip:"80222", stage:"Approached",   touchCount:1, lastContact:"2026-06-10", partner:"Archie",notes:"Before 9 AM. Tied to next walk with Archie.",                                               returnDate:"",           nextAction:"Before 9 AM — next walk with Archie" },
+  { id:"s13", business:"Colorado Custom Stone",        dm:"Dylan",            phone:"",             zip:"80223", stage:"Approached",   touchCount:1, lastContact:"2026-06-08", partner:"RJ",    notes:"Tied to next walk with RJ and Argie.",                                                      returnDate:"",           nextAction:"Next walk with RJ/Argie" },
+  { id:"s14", business:"Cabinet Warehouse",            dm:"David Chavez",     phone:"",             zip:"80223", stage:"Approached",   touchCount:1, lastContact:"2026-06-08", partner:"Argie", notes:"Tied to next walk with RJ and Argie.",                                                      returnDate:"",           nextAction:"Email David Chavez" },
+  { id:"s15", business:"Color House Denver",           dm:"Toby Zalinski",    phone:"720-295-2264", zip:"80113", stage:"Presented",    touchCount:1, lastContact:"2026-05-26", partner:"Gianni",notes:"tobyzalinski@icloud.com | Text: 720-782-7557 | Very sweet, genuine yes. | Meeting 11AM 6/9 | 4830 S Broadway, Englewood", returnDate:"2026-06-09", nextAction:"Follow up on presentation" },
+  { id:"s16", business:"Mile High Rentals",            dm:"Bill Barbee",      phone:"303-789-2537", zip:"80113", stage:"Presented",    touchCount:1, lastContact:"2026-05-26", partner:"Gianni",notes:"mhrsbill@gmail.com | Not talkative but genuine yes. | Meeting 11:30AM 6/9 | 4817 S Broadway", returnDate:"2026-06-09", nextAction:"Follow up on presentation" },
+  { id:"s17", business:"Karpov Construction",          dm:"Vladimir",         phone:"303-908-2051", zip:"80110", stage:"Approached",   touchCount:1, lastContact:"2026-06-01", partner:"Solo",  notes:"Gatekeeper: Stasik. Vladimir direct: (303) 908-2051.",                                     returnDate:"2026-06-01", nextAction:"Call Vladimir to schedule" },
+];
+
+function blankEntry() {
+  return { id: Date.now().toString(), business:"", dm:"", phone:"", zip:"", stage:"Approached", touchCount:1, lastContact: new Date().toISOString().split("T")[0], partner:"Solo", notes:"", returnDate:"", nextAction:"" };
+}
+
+// ── Styles ────────────────────────────────────────────────────────────────────
+const SI = { width:"100%", background:"#1E293B", border:"1px solid #2A3141", borderRadius:8, padding:"9px 12px", color:"#F1F5F9", fontSize:13, outline:"none", fontFamily:"inherit", boxSizing:"border-box" };
+
+// ── Main app ──────────────────────────────────────────────────────────────────
+function App() {
+  const [entries,       setEntries]       = useState([]);
+  const [loading,       setLoading]       = useState(true);
+  const [filterStage,   setFilterStage]   = useState("All");
+  const [filterPartner, setFilterPartner] = useState("All");
+  const [showClosed,    setShowClosed]    = useState(false);
+  const [search,        setSearch]        = useState("");
+  const [expandedId,    setExpandedId]    = useState(null);
+  const [modal,         setModal]         = useState(null);
+  const [form,          setForm]          = useState(null);
+
+  useEffect(() => {
+    const r = lsGet("aflac:pipeline");
+    setEntries(r ? JSON.parse(r.value) : SEED);
+    if (!r) lsSet("aflac:pipeline", JSON.stringify(SEED));
+    setLoading(false);
+  }, []);
+
+  async function persist(next, changed=null) {
+    setEntries(next);
+    lsSet("aflac:pipeline", JSON.stringify(next));
+    if (changed) syncToDrive("upsert", { data: changed });
+  }
+
+  const openAdd  = () => { setForm(blankEntry()); setModal("add"); };
+  const openEdit = e  => { setForm({...e});        setModal("edit"); };
+
+  async function saveForm() {
+    if (!form?.business?.trim()) return;
+    const saved = modal === "add" ? {...form, id: Date.now().toString()} : form;
+    const next  = modal === "add" ? [...entries, saved] : entries.map(e => e.id===form.id ? saved : e);
+    await persist(next, saved);
+    setModal(null); setForm(null);
+  }
+
+  async function deleteEntry() {
+    syncToDrive("delete", { business: form.business });
+    await persist(entries.filter(e => e.id !== form.id));
+    setModal(null); setForm(null);
+  }
+
+  async function addTouch(id, ev) {
+    ev.stopPropagation();
+    const updated = entries.map(e => e.id===id ? {...e, touchCount:e.touchCount+1, lastContact:new Date().toISOString().split("T")[0]} : e);
+    const changed = updated.find(e => e.id===id);
+    await persist(updated, changed);
+  }
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const visible = sortByUrgency(entries.filter(e => {
+    if (!showClosed && (e.stage==="Dead" || e.stage==="Client")) return false;
+    if (filterStage   !== "All" && e.stage   !== filterStage)   return false;
+    if (filterPartner !== "All" && e.partner !== filterPartner) return false;
+    if (search) { const q=search.toLowerCase(); return e.business.toLowerCase().includes(q)||(e.dm||"").toLowerCase().includes(q)||e.zip.includes(q); }
+    return true;
+  }));
+
+  const dueNow  = entries.filter(e => { if(!e.returnDate||e.stage==="Dead"||e.stage==="Client")return false; const d=new Date(e.returnDate+"T00:00:00"); d.setHours(0,0,0,0); return d<=today; }).length;
+  const dueWeek = entries.filter(e => { if(!e.returnDate||e.stage==="Dead"||e.stage==="Client")return false; const d=new Date(e.returnDate+"T00:00:00"); d.setHours(0,0,0,0); const diff=Math.round((d-today)/86400000); return diff>=0&&diff<=7; }).length;
+  const active  = entries.filter(e => e.stage!=="Dead"&&e.stage!=="Client").length;
+
+  if (loading) return <div style={{background:"#0D1117",minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{color:"#F59E0B",fontSize:15}}>Loading…</span></div>;
+
+  return (
+    <div style={{background:"#0D1117",minHeight:"100vh",paddingBottom:80}}>
+      {/* Header */}
+      <div style={{padding:"env(safe-area-inset-top, 20px) 16px 0 16px", paddingTop:"max(env(safe-area-inset-top), 20px)", borderBottom:"1px solid #1A2335"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:14}}>
+          <div>
+            <div style={{fontSize:10,fontWeight:800,letterSpacing:"0.14em",color:"#F59E0B",textTransform:"uppercase",marginBottom:3}}>Bedrock Benefits</div>
+            <div style={{fontSize:24,fontWeight:900,color:"#F1F5F9",letterSpacing:"-0.6px",lineHeight:1}}>Pipeline</div>
+          </div>
+          <button onClick={openAdd} style={{background:"#F59E0B",color:"#0D1117",border:"none",borderRadius:8,padding:"9px 18px",fontSize:13,fontWeight:800,cursor:"pointer"}}>+ Add</button>
+        </div>
+        <div style={{display:"flex",gap:24,paddingBottom:16}}>
+          <Stat label="Due now"   value={dueNow}  color={dueNow>0?"#EF4444":"#475569"} />
+          <Stat label="This week" value={dueWeek} color="#F59E0B" />
+          <Stat label="Active"    value={active}  color="#60A5FA" />
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div style={{padding:"12px 16px 0"}}>
+        <input placeholder="Search business, DM, ZIP…" value={search} onChange={e=>setSearch(e.target.value)} style={{...SI, marginBottom:10}} />
+        <div style={{display:"flex",gap:6,overflowX:"auto",paddingBottom:8,scrollbarWidth:"none"}}>
+          {FILTER_STAGES.map(s => <Pill key={s} label={s} active={filterStage===s} color={STAGES[s]?.color||"#94A3B8"} onClick={()=>setFilterStage(s)} />)}
+        </div>
+        <div style={{display:"flex",gap:6,overflowX:"auto",paddingBottom:10,scrollbarWidth:"none"}}>
+          {["All",...PARTNERS].map(p => <Pill key={p} label={p} active={filterPartner===p} color="#94A3B8" onClick={()=>setFilterPartner(p)} />)}
+        </div>
+      </div>
+
+      <div style={{padding:"0 16px 8px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <span style={{fontSize:11,color:"#475569"}}>{visible.length} showing</span>
+        <button onClick={()=>setShowClosed(v=>!v)} style={{background:"none",border:"none",color:"#475569",fontSize:11,cursor:"pointer",padding:0}}>{showClosed?"Hide closed":"Show closed"}</button>
+      </div>
+
+      <div style={{padding:"0 16px"}}>
+        {visible.length===0 && <div style={{textAlign:"center",padding:"48px 0",color:"#334155",fontSize:14}}>No entries — tap <b style={{color:"#F59E0B"}}>+ Add</b> to log one</div>}
+        {visible.map(entry => <Card key={entry.id} entry={entry} expanded={expandedId===entry.id} onToggle={()=>setExpandedId(expandedId===entry.id?null:entry.id)} onEdit={()=>openEdit(entry)} onTouch={ev=>addTouch(entry.id,ev)} />)}
+      </div>
+
+      {modal && form && <Modal mode={modal} form={form} update={(k,v)=>setForm(f=>({...f,[k]:v}))} onSave={saveForm} onDelete={deleteEntry} onClose={()=>{setModal(null);setForm(null);}} />}
+
+      <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}`}</style>
+    </div>
+  );
+}
+
+function Stat({ label, value, color }) {
+  return <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}><div style={{fontSize:22,fontWeight:900,color,lineHeight:1}}>{value}</div><div style={{fontSize:9,color:"#475569",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginTop:3}}>{label}</div></div>;
+}
+
+function Pill({ label, active, color, onClick }) {
+  return <button onClick={onClick} style={{background:active?color:"transparent",color:active?"#0D1117":"#475569",border:`1px solid ${active?color:"#1E293B"}`,borderRadius:20,padding:"4px 11px",fontSize:10,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap",letterSpacing:"0.05em",flexShrink:0}}>{label}</button>;
+}
+
+function Card({ entry, expanded, onToggle, onEdit, onTouch }) {
+  const u = getUrgency(entry.returnDate);
+  const s = STAGES[entry.stage]||STAGES.Approached;
+  return (
+    <div onClick={onToggle} style={{background:"#131923",borderRadius:10,marginBottom:7,border:"1px solid #1A2335",borderLeft:`4px solid ${u.color}`,cursor:"pointer",overflow:"hidden",animation:u.pulse?"pulse 2s infinite":"none"}}>
+      <div style={{padding:"12px 12px 10px"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8}}>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:15,fontWeight:700,color:"#F1F5F9",marginBottom:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{entry.business}</div>
+            <div style={{fontSize:12,color:"#64748B",marginBottom:7}}>{entry.dm||"—"}{entry.phone?` · ${entry.phone}`:""}</div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:5,alignItems:"center"}}>
+              <Badge bg={s.bg} color={s.color}>{entry.stage}</Badge>
+              <Badge bg="#1A2335" color="#475569">T{entry.touchCount}</Badge>
+              <span style={{fontSize:10,color:"#334155",fontWeight:600}}>{entry.zip}</span>
+              {entry.partner!=="Solo"&&<span style={{fontSize:10,color:"#60A5FA",fontWeight:600}}>w/{entry.partner}</span>}
+            </div>
+          </div>
+          <div style={{textAlign:"right",flexShrink:0}}>
+            <div style={{fontSize:13,fontWeight:900,color:u.color,lineHeight:1,marginBottom:2}}>{u.label}</div>
+            {entry.returnDate&&<div style={{fontSize:9,color:"#334155"}}>{entry.returnDate.slice(5).replace("-","/")}</div>}
+          </div>
+        </div>
+      </div>
+      {expanded&&(
+        <div style={{borderTop:"1px solid #1A2335",padding:"10px 12px"}} onClick={e=>e.stopPropagation()}>
+          {entry.nextAction&&<Sec label="Next action" color="#F59E0B">{entry.nextAction}</Sec>}
+          {entry.notes&&<Sec label="Notes" color="#475569">{entry.notes}</Sec>}
+          <div style={{fontSize:10,color:"#334155",marginBottom:12}}>Last contact: {entry.lastContact||"—"}</div>
+          <div style={{display:"flex",gap:8}}>
+            <button onClick={onTouch} style={{flex:1,background:"#1A2335",color:"#64748B",border:"1px solid #1E293B",borderRadius:7,padding:"8px 0",fontSize:12,fontWeight:700,cursor:"pointer"}}>+1 Touch</button>
+            <button onClick={e=>{e.stopPropagation();onEdit();}} style={{flex:1,background:"#F59E0B",color:"#0D1117",border:"none",borderRadius:7,padding:"8px 0",fontSize:12,fontWeight:700,cursor:"pointer"}}>Edit</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Badge({ children, bg, color }) {
+  return <span style={{background:bg,color,borderRadius:4,padding:"2px 7px",fontSize:9,fontWeight:800,letterSpacing:"0.07em",textTransform:"uppercase"}}>{children}</span>;
+}
+
+function Sec({ label, color, children }) {
+  return <div style={{marginBottom:9}}><div style={{fontSize:9,fontWeight:800,color,textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:3}}>{label}</div><div style={{fontSize:13,color:"#94A3B8",lineHeight:1.55}}>{children}</div></div>;
+}
+
+function Modal({ mode, form, update, onSave, onDelete, onClose }) {
+  const isEdit = mode==="edit";
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",zIndex:200,display:"flex",alignItems:"flex-end",justifyContent:"center"}} onClick={onClose}>
+      <div style={{background:"#131923",borderRadius:"16px 16px 0 0",width:"100%",maxWidth:520,padding:"20px 16px 36px",maxHeight:"88vh",overflowY:"auto",paddingBottom:"max(36px, env(safe-area-inset-bottom))"}} onClick={e=>e.stopPropagation()}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18}}>
+          <div style={{fontSize:16,fontWeight:800,color:"#F1F5F9"}}>{isEdit?"Edit Entry":"Add Entry"}</div>
+          <button onClick={onClose} style={{background:"none",border:"none",color:"#475569",fontSize:22,cursor:"pointer",lineHeight:1}}>×</button>
+        </div>
+        <F label="Business *"><input style={SI} value={form.business} onChange={e=>update("business",e.target.value)} placeholder="Business name" /></F>
+        <F label="Decision Maker"><input style={SI} value={form.dm} onChange={e=>update("dm",e.target.value)} placeholder="Owner / DM name" /></F>
+        <F label="Phone"><input style={SI} value={form.phone} onChange={e=>update("phone",e.target.value)} placeholder="Phone number" /></F>
+        <div style={{display:"flex",gap:10}}>
+          <F label="ZIP" style={{flex:1}}><input style={SI} value={form.zip} onChange={e=>update("zip",e.target.value)} placeholder="80110" /></F>
+          <F label="Touch #" style={{flex:1}}><input style={SI} type="number" value={form.touchCount} onChange={e=>update("touchCount",parseInt(e.target.value)||1)} /></F>
+        </div>
+        <F label="Stage"><select style={SI} value={form.stage} onChange={e=>update("stage",e.target.value)}>{STAGE_NAMES.map(s=><option key={s}>{s}</option>)}</select></F>
+        <F label="Partner"><select style={SI} value={form.partner} onChange={e=>update("partner",e.target.value)}>{PARTNERS.map(p=><option key={p}>{p}</option>)}</select></F>
+        <F label="Return Date"><input style={SI} type="date" value={form.returnDate} onChange={e=>update("returnDate",e.target.value)} /></F>
+        <F label="Next Action"><input style={SI} value={form.nextAction} onChange={e=>update("nextAction",e.target.value)} placeholder="What to do next" /></F>
+        <F label="Notes"><textarea style={{...SI,resize:"vertical",lineHeight:1.5}} rows={3} value={form.notes} onChange={e=>update("notes",e.target.value)} placeholder="DM context, objections, referral source…" /></F>
+        <button onClick={onSave} style={{width:"100%",background:"#F59E0B",color:"#0D1117",border:"none",borderRadius:9,padding:"14px 0",fontSize:14,fontWeight:800,cursor:"pointer",marginTop:6}}>{isEdit?"Save Changes":"Add to Pipeline"}</button>
+        {isEdit&&<button onClick={onDelete} style={{width:"100%",background:"transparent",color:"#EF4444",border:"1px solid #1E293B",borderRadius:9,padding:"12px 0",fontSize:13,fontWeight:700,cursor:"pointer",marginTop:8}}>Remove from Pipeline</button>}
+      </div>
+    </div>
+  );
+}
+
+function F({ label, children, style }) {
+  return <div style={{marginBottom:12,...style}}><div style={{fontSize:9,fontWeight:800,color:"#475569",textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:4}}>{label}</div>{children}</div>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js', { scope: './' })
+        .catch(e => console.warn('SW registration failed:', e));
+    });
+  }
+</script>
+</body>
+</html>
