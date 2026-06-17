@@ -1295,7 +1295,159 @@ function F(_ref7) {
     }
   }, label), children);
 }
-ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+
+// ── PIN Gate ──────────────────────────────────────────────────────────────────
+var CORRECT_PIN = "5280"; // ← change this to your preferred PIN
+var SESSION_KEY = "aflac:unlocked";
+var SESSION_HRS = 8; // auto-lock after 8 hours
+
+function PinGate(_ref8) {
+  var children = _ref8.children;
+  var _useState17 = useState(function () {
+      try {
+        var ts = sessionStorage.getItem(SESSION_KEY);
+        if (!ts) return false;
+        return Date.now() - parseInt(ts) < SESSION_HRS * 3600000;
+      } catch (_unused3) {
+        return false;
+      }
+    }),
+    _useState18 = _slicedToArray(_useState17, 2),
+    unlocked = _useState18[0],
+    setUnlocked = _useState18[1];
+  var _useState19 = useState(""),
+    _useState20 = _slicedToArray(_useState19, 2),
+    input = _useState20[0],
+    setInput = _useState20[1];
+  var _useState21 = useState(false),
+    _useState22 = _slicedToArray(_useState21, 2),
+    shake = _useState22[0],
+    setShake = _useState22[1];
+  function press(d) {
+    if (shake) return;
+    var next = input + d;
+    if (next.length < CORRECT_PIN.length) {
+      setInput(next);
+      return;
+    }
+    // Full PIN entered
+    if (next === CORRECT_PIN) {
+      try {
+        sessionStorage.setItem(SESSION_KEY, Date.now().toString());
+      } catch (_unused4) {}
+      setUnlocked(true);
+    } else {
+      setShake(true);
+      setTimeout(function () {
+        setShake(false);
+        setInput("");
+      }, 650);
+    }
+  }
+  function del() {
+    setInput(function (i) {
+      return i.slice(0, -1);
+    });
+  }
+  if (unlocked) return children;
+  var dots = Array.from({
+    length: CORRECT_PIN.length
+  }, function (_, i) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        width: 14,
+        height: 14,
+        borderRadius: "50%",
+        background: i < input.length ? "#F59E0B" : "transparent",
+        border: "2px solid ".concat(i < input.length ? "#F59E0B" : "#334155"),
+        transition: "all 0.15s"
+      }
+    });
+  });
+  var keys = [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"], [null, "0", "del"]];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#0D1117",
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      fontFamily: "-apple-system, BlinkMacSystemFont, system-ui, sans-serif",
+      animation: shake ? "shake 0.6s ease" : "none",
+      userSelect: "none"
+    }
+  }, /*#__PURE__*/React.createElement("style", null, "\n        @keyframes shake {\n          0%,100%{transform:translateX(0)}\n          15%{transform:translateX(-10px)}\n          30%{transform:translateX(10px)}\n          45%{transform:translateX(-8px)}\n          60%{transform:translateX(8px)}\n          75%{transform:translateX(-4px)}\n          90%{transform:translateX(4px)}\n        }\n      "), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 48,
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      fontWeight: 800,
+      letterSpacing: "0.14em",
+      color: "#F59E0B",
+      textTransform: "uppercase",
+      marginBottom: 6
+    }
+  }, "Bedrock Benefits"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      fontWeight: 900,
+      color: "#F1F5F9",
+      letterSpacing: "-0.6px"
+    }
+  }, "Pipeline")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 16,
+      marginBottom: 48
+    }
+  }, dots), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "repeat(3,72px)",
+      gap: 12
+    }
+  }, keys.flat().map(function (k, i) {
+    if (k === null) return /*#__PURE__*/React.createElement("div", {
+      key: i
+    });
+    var isDel = k === "del";
+    return /*#__PURE__*/React.createElement("button", {
+      key: i,
+      onPointerDown: function onPointerDown(e) {
+        e.preventDefault();
+        isDel ? del() : press(k);
+      },
+      style: {
+        width: 72,
+        height: 72,
+        borderRadius: "50%",
+        background: isDel ? "transparent" : "#161B27",
+        border: isDel ? "none" : "1px solid #1E293B",
+        color: isDel ? "#475569" : "#F1F5F9",
+        fontSize: isDel ? 18 : 22,
+        fontWeight: 700,
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        WebkitTapHighlightColor: "transparent",
+        transition: "background 0.1s"
+      }
+    }, isDel ? "⌫" : k);
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 40,
+      fontSize: 11,
+      color: "#334155"
+    }
+  }, "Enter PIN to continue"));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(PinGate, null, /*#__PURE__*/React.createElement(App, null)));
 </script>
 <script>
   if ('serviceWorker' in navigator) {
