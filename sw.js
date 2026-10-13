@@ -1,11 +1,12 @@
-// Aflac Pipeline — Service Worker
-const CACHE = 'aflac-pipeline-v2';
+// Aflac CRM — Service Worker
+const CACHE = 'aflac-crm-v3';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
+  './data/businesses.json',
   'https://unpkg.com/react@18/umd/react.production.min.js',
   'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js',
   'https://unpkg.com/@babel/standalone/babel.min.js',
@@ -27,11 +28,24 @@ self.addEventListener('activate', e => {
   );
 });
 
-// Fetch — cache first, network fallback
-// Apps Script webhook calls go straight to network (no-cors, can't cache response)
+// Fetch
+//  - Google Maps API + tiles go straight to network (can't/shouldn't cache).
+//  - data/businesses.json is network-first so a "Sync from repo" always sees the latest.
+//  - everything else is cache-first for fast, offline loads.
 self.addEventListener('fetch', e => {
-  if (e.request.url.includes('script.google.com')) {
-    return; // Let Drive sync go straight to network
+  const url = e.request.url;
+  if (url.includes('maps.googleapis.com') || url.includes('maps.gstatic.com') || url.includes('googleapis.com/maps')) {
+    return; // let the map go straight to network
+  }
+  if (url.includes('/data/businesses.json')) {
+    e.respondWith(
+      fetch(e.request).then(res => {
+        const clone = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, clone));
+        return res;
+      }).catch(() => caches.match(e.request))
+    );
+    return;
   }
   e.respondWith(
     caches.match(e.request).then(cached => {

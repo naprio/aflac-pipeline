@@ -1,7 +1,7 @@
 {
-  "name": "Aflac Pipeline",
-  "short_name": "Pipeline",
-  "description": "Aflac field CRM pipeline tracker — Bedrock Benefits",
+  "name": "Aflac CRM Tracker",
+  "short_name": "Aflac CRM",
+  "description": "Simple Aflac field CRM — business cycle tracker + territory map — Bedrock Benefits",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

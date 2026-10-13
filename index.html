@@ -6,2564 +6,719 @@
   <meta name="theme-color" content="#F59E0B">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Aflac Pipeline">
+  <meta name="apple-mobile-web-app-title" content="Aflac CRM">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <title>Aflac Pipeline</title>
+  <title>Aflac CRM</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { background: #0D1117; color: #F1F5F9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; overscroll-behavior: none; }
     ::-webkit-scrollbar { display: none; }
-    input, select, textarea { -webkit-appearance: none; border-radius: 8px; }
+    input, select, textarea { -webkit-appearance: none; border-radius: 8px; font-family: inherit; }
     input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.5); }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 15%{transform:translateX(-10px)} 30%{transform:translateX(10px)} 45%{transform:translateX(-8px)} 60%{transform:translateX(8px)} 75%{transform:translateX(-4px)} 90%{transform:translateX(4px)} }
+    .gm-style-iw { color: #0D1117; }
   </style>
 </head>
 <body>
 <div id="root"></div>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-<script>
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
-function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
-function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
-function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
-function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-var _React = React,
-  useState = _React.useState,
-  useEffect = _React.useEffect;
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef } = React;
 
-// ── Drive sync ────────────────────────────────────────────────────────────────
-var WEBHOOK = "https://script.google.com/macros/s/AKfycbzO4uxbEkdGg2VomMeQEHecZAZzY7MP0jx8bhrFk97kOk7ua1xr3soy6u_6ODJCHnhcbQ/exec";
-function syncToDrive(_x, _x2) {
-  return _syncToDrive.apply(this, arguments);
-}
-function _syncToDrive() {
-  _syncToDrive = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(action, payload) {
-    var body, _t3;
-    return _regenerator().w(function (_context8) {
-      while (1) switch (_context8.p = _context8.n) {
-        case 0:
-          _context8.p = 0;
-          body = new URLSearchParams();
-          body.append("payload", JSON.stringify(_objectSpread({
-            action: action
-          }, payload)));
-          _context8.n = 1;
-          return fetch(WEBHOOK, {
-            method: "POST",
-            mode: "no-cors",
-            body: body
-          });
-        case 1:
-          _context8.n = 3;
-          break;
-        case 2:
-          _context8.p = 2;
-          _t3 = _context8.v;
-          console.warn("Drive sync failed:", _t3);
-        case 3:
-          return _context8.a(2);
-      }
-    }, _callee8, null, [[0, 2]]);
-  }));
-  return _syncToDrive.apply(this, arguments);
-}
-function fetchFromDrive() {
-  return _fetchFromDrive.apply(this, arguments);
-} // ── Prospect log fetch ────────────────────────────────────────────────────────
-function _fetchFromDrive() {
-  _fetchFromDrive = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9() {
-    var res, json;
-    return _regenerator().w(function (_context9) {
-      while (1) switch (_context9.n) {
-        case 0:
-          _context9.n = 1;
-          return fetch(WEBHOOK + "?action=read");
-        case 1:
-          res = _context9.v;
-          _context9.n = 2;
-          return res.json();
-        case 2:
-          json = _context9.v;
-          if (!(!json.ok || !json.data)) {
-            _context9.n = 3;
-            break;
-          }
-          throw new Error(json.error || "No data");
-        case 3:
-          return _context9.a(2, json.data.map(function (row, i) {
-            return {
-              id: "sheet-".concat((row['Business'] || '').toLowerCase().replace(/[^a-z0-9]/g, '-'), "-").concat(row['ZIP'] || i),
-              business: row['Business'] || '',
-              dm: row['DM'] || '',
-              phone: row['Phone'] || '',
-              zip: row['ZIP'] || '',
-              stage: row['Stage'] || 'Approached',
-              touchCount: parseInt(row['Touch#']) || 1,
-              lastContact: row['Last Contact'] || '',
-              partner: row['Partner'] || 'Solo',
-              notes: row['Notes'] || '',
-              returnDate: row['Return Date'] || '',
-              nextAction: row['Next Action'] || ''
-            };
-          }).filter(function (e) {
-            return e.business.trim();
-          }));
-      }
-    }, _callee9);
-  }));
-  return _fetchFromDrive.apply(this, arguments);
-}
-function fetchProspectLog() {
-  return _fetchProspectLog.apply(this, arguments);
-} // ── Local storage (replaces window.storage) ───────────────────────────────────
-function _fetchProspectLog() {
-  _fetchProspectLog = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0() {
-    var res, json;
-    return _regenerator().w(function (_context0) {
-      while (1) switch (_context0.n) {
-        case 0:
-          _context0.n = 1;
-          return fetch(WEBHOOK + "?action=read_prospects");
-        case 1:
-          res = _context0.v;
-          _context0.n = 2;
-          return res.json();
-        case 2:
-          json = _context0.v;
-          if (!(!json.ok || !json.data)) {
-            _context0.n = 3;
-            break;
-          }
-          throw new Error(json.error || "No data");
-        case 3:
-          return _context0.a(2, json.data.filter(function (r) {
-            return r['Business'];
-          }));
-      }
-    }, _callee0);
-  }));
-  return _fetchProspectLog.apply(this, arguments);
-}
-function lsGet(key) {
-  try {
-    var v = localStorage.getItem(key);
-    return v ? {
-      value: v
-    } : null;
-  } catch (_unused) {
-    return null;
-  }
-}
-function lsSet(key, val) {
-  try {
-    localStorage.setItem(key, val);
-    return true;
-  } catch (_unused2) {
-    return false;
-  }
-}
+// ─────────────────────────────────────────────────────────────────────────────
+// Config
+// ─────────────────────────────────────────────────────────────────────────────
 
-// ── Stage config ──────────────────────────────────────────────────────────────
-var STAGES = {
-  Cold: {
-    color: "#64748B",
-    bg: "rgba(100,116,139,0.15)"
-  },
-  Approached: {
-    color: "#60A5FA",
-    bg: "rgba(96,165,250,0.15)"
-  },
-  Warm: {
-    color: "#FBBF24",
-    bg: "rgba(251,191,36,0.15)"
-  },
-  "Meeting Set": {
-    color: "#A78BFA",
-    bg: "rgba(167,139,250,0.15)"
-  },
-  Presented: {
-    color: "#FB923C",
-    bg: "rgba(251,146,60,0.15)"
-  },
-  Enrolled: {
-    color: "#34D399",
-    bg: "rgba(52,211,153,0.15)"
-  },
-  Client: {
-    color: "#10B981",
-    bg: "rgba(16,185,129,0.2)"
-  },
-  Dead: {
-    color: "#6B7280",
-    bg: "rgba(107,114,128,0.1)"
-  }
+// The business cycle, in order. Moving a business "along the cycle" steps through
+// this list. "Dead" sits off-cycle (a prospect that closed lost / do-not-contact).
+const CYCLE = ["Cold", "Approached", "Warm", "Meeting Set", "Presented", "Enrolled", "Client"];
+
+const STAGES = {
+  "Cold":        { color: "#64748B", bg: "rgba(100,116,139,0.15)" },
+  "Approached":  { color: "#60A5FA", bg: "rgba(96,165,250,0.15)" },
+  "Warm":        { color: "#FBBF24", bg: "rgba(251,191,36,0.15)" },
+  "Meeting Set": { color: "#A78BFA", bg: "rgba(167,139,250,0.15)" },
+  "Presented":   { color: "#FB923C", bg: "rgba(251,146,60,0.15)" },
+  "Enrolled":    { color: "#34D399", bg: "rgba(52,211,153,0.15)" },
+  "Client":      { color: "#10B981", bg: "rgba(16,185,129,0.2)" },
+  "Dead":        { color: "#6B7280", bg: "rgba(107,114,128,0.1)" },
 };
-var STAGE_NAMES = Object.keys(STAGES);
-var PARTNERS = ["Solo", "Maylene", "Gianni", "Oscar", "Brad", "RJ", "Argie", "Archie"];
-var FILTER_STAGES = ["All", "Meeting Set", "Warm", "Approached", "Presented", "Enrolled"];
+const ALL_STAGES = [...CYCLE, "Dead"];
+const FILTER_STAGES = ["All", ...CYCLE, "Dead"];
 
-// ── Urgency ───────────────────────────────────────────────────────────────────
-function getUrgency(returnDate) {
-  if (!returnDate) return {
-    label: "—",
-    color: "#475569",
-    days: 9999,
-    pulse: false
-  };
-  var today = new Date();
-  today.setHours(0, 0, 0, 0);
-  var ret = new Date(returnDate + "T00:00:00");
-  var diff = Math.round((ret - today) / 86400000);
-  if (diff < 0) return {
-    label: "".concat(Math.abs(diff), "d late"),
-    color: "#EF4444",
-    days: diff,
-    pulse: true
-  };
-  if (diff === 0) return {
-    label: "Today",
-    color: "#F59E0B",
-    days: 0,
-    pulse: true
-  };
-  if (diff <= 3) return {
-    label: "".concat(diff, "d"),
-    color: "#F59E0B",
-    days: diff,
-    pulse: false
-  };
-  if (diff <= 7) return {
-    label: "".concat(diff, "d"),
-    color: "#84CC16",
-    days: diff,
-    pulse: false
-  };
-  return {
-    label: "".concat(diff, "d"),
-    color: "#22C55E",
-    days: diff,
-    pulse: false
-  };
+const DATA_KEY = "aflac:crm:v1";        // local source of truth on this device
+const GKEY_KEY = "aflac:crm:gmapsKey";  // Google Maps API key
+const SEED_URL = "./data/businesses.json";
+
+// PIN lock (matches the original app). Change CORRECT_PIN to your own.
+const CORRECT_PIN = "5280";
+const SESSION_KEY = "aflac:unlocked";
+const SESSION_HRS = 8;
+
+const todayISO = () => new Date().toISOString().split("T")[0];
+const nowISO = () => new Date().toISOString();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Local storage
+// ─────────────────────────────────────────────────────────────────────────────
+function lsGet(key) { try { return localStorage.getItem(key); } catch { return null; } }
+function lsSet(key, val) { try { localStorage.setItem(key, val); return true; } catch { return false; } }
+
+function loadLocal() {
+  const raw = lsGet(DATA_KEY);
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : (parsed.businesses || []);
+  } catch { return null; }
 }
-function sortByUrgency(arr) {
-  return _toConsumableArray(arr).sort(function (a, b) {
-    return getUrgency(a.returnDate).days - getUrgency(b.returnDate).days;
+function saveLocal(businesses) {
+  lsSet(DATA_KEY, JSON.stringify({ version: 1, updatedAt: nowISO(), businesses }));
+}
+
+// Merge repo seed into local data. Newest updatedAt wins per business id.
+function mergeByUpdatedAt(local, incoming) {
+  const map = new Map();
+  (local || []).forEach(b => map.set(b.id, b));
+  (incoming || []).forEach(b => {
+    const cur = map.get(b.id);
+    if (!cur || new Date(b.updatedAt || 0) >= new Date(cur.updatedAt || 0)) map.set(b.id, b);
   });
+  return [...map.values()];
 }
 
-// ── Seed data ─────────────────────────────────────────────────────────────────
-var SEED = [{
-  id: "s1",
-  business: "Gorilla Demolition",
-  dm: "Ashley Hill / TJ",
-  phone: "",
-  zip: "80110",
-  stage: "Approached",
-  touchCount: 1,
-  lastContact: "2026-06-14",
-  partner: "Solo",
-  notes: "TJ in shop when garage door open. Guard dogs Lucy + Rocky on-site.",
-  returnDate: "2026-06-16",
-  nextAction: "Return in person"
-}, {
-  id: "s2",
-  business: "Rocky Mountain Concrete",
-  dm: "Greg Johnson",
-  phone: "",
-  zip: "80110",
-  stage: "Warm",
-  touchCount: 2,
-  lastContact: "2026-06-12",
-  partner: "Solo",
-  notes: "Available 6–6:30 AM only. Needs spousal buy-in. Prior Aflac attempt failed.",
-  returnDate: "2026-06-16",
-  nextAction: "Call to schedule"
-}, {
-  id: "s3",
-  business: "Restorative Justice",
-  dm: "Debra Dorsey",
-  phone: "720-913-9125",
-  zip: "80223",
-  stage: "Approached",
-  touchCount: 1,
-  lastContact: "2026-06-14",
-  partner: "Solo",
-  notes: "Call attempted, moved to 6/16.",
-  returnDate: "2026-06-16",
-  nextAction: "Call"
-}, {
-  id: "s4",
-  business: "Miss Jen's Munchkins",
-  dm: "Jen",
-  phone: "",
-  zip: "80120",
-  stage: "Warm",
-  touchCount: 1,
-  lastContact: "2026-06-15",
-  partner: "Solo",
-  notes: "Referral from Angela Haydusky. Email sent. Slots: 6/17 8:30 AM or 6/18 4 PM.",
-  returnDate: "2026-06-17",
-  nextAction: "Confirm meeting"
-}, {
-  id: "s5",
-  business: "Pioneer Granite & Quartz",
-  dm: "Linda",
-  phone: "",
-  zip: "80134",
-  stage: "Warm",
-  touchCount: 2,
-  lastContact: "2026-06-14",
-  partner: "Solo",
-  notes: "Friendly gatekeeper completed scheduling form. Awaiting callback.",
-  returnDate: "2026-06-17",
-  nextAction: "Await / follow up"
-}, {
-  id: "s6",
-  business: "Concrete Solutions",
-  dm: "Kenny",
-  phone: "",
-  zip: "80110",
-  stage: "Warm",
-  touchCount: 2,
-  lastContact: "2026-06-12",
-  partner: "Solo",
-  notes: "Connected via prior lead elevation handout.",
-  returnDate: "2026-06-18",
-  nextAction: "Follow up if no word"
-}, {
-  id: "s7",
-  business: "Red Hawk Roofing",
-  dm: "Ciera Muniz",
-  phone: "",
-  zip: "80134",
-  stage: "Warm",
-  touchCount: 2,
-  lastContact: "2026-06-14",
-  partner: "Solo",
-  notes: "Young team. GI life + disability/accident pairing generated interest.",
-  returnDate: "2026-06-18",
-  nextAction: "Await callback"
-}, {
-  id: "s8",
-  business: "Luxury Auto Works",
-  dm: "Aaron",
-  phone: "",
-  zip: "80112",
-  stage: "Warm",
-  touchCount: 2,
-  lastContact: "2026-06-10",
-  partner: "Solo",
-  notes: "Intro pending to Angela Haydusky (health) and Victor/GiveAccor (marketing).",
-  returnDate: "2026-06-20",
-  nextAction: "Make introductions"
-}, {
-  id: "s9",
-  business: "Gold Standard Collision",
-  dm: "Andy",
-  phone: "",
-  zip: "80110",
-  stage: "Meeting Set",
-  touchCount: 3,
-  lastContact: "2026-06-12",
-  partner: "Solo",
-  notes: "Group benefits. Coordinating with Angela Haydusky on enrollment timeline.",
-  returnDate: "2026-06-22",
-  nextAction: "Coordinate with Angela"
-}, {
-  id: "s10",
-  business: "Denex / GiveAccor",
-  dm: "Victor",
-  phone: "",
-  zip: "80112",
-  stage: "Meeting Set",
-  touchCount: 3,
-  lastContact: "2026-06-14",
-  partner: "Solo",
-  notes: "Discovery Zoom June 24 at 7 PM. Victor also owns GiveAccor (auto body marketing).",
-  returnDate: "2026-06-24",
-  nextAction: "Zoom discovery meeting"
-}, {
-  id: "s11",
-  business: "Trice Jewelers",
-  dm: "Jane Mora",
-  phone: "303-759-9661",
-  zip: "80222",
-  stage: "Approached",
-  touchCount: 1,
-  lastContact: "2026-06-10",
-  partner: "Archie",
-  notes: "Tied to next walk with Archie.",
-  returnDate: "",
-  nextAction: "Next walk with Archie"
-}, {
-  id: "s12",
-  business: "Angel's Installations",
-  dm: "Angel",
-  phone: "",
-  zip: "80222",
-  stage: "Approached",
-  touchCount: 1,
-  lastContact: "2026-06-10",
-  partner: "Archie",
-  notes: "Before 9 AM. Tied to next walk with Archie.",
-  returnDate: "",
-  nextAction: "Before 9 AM — next walk with Archie"
-}, {
-  id: "s13",
-  business: "Colorado Custom Stone",
-  dm: "Dylan",
-  phone: "",
-  zip: "80223",
-  stage: "Approached",
-  touchCount: 1,
-  lastContact: "2026-06-08",
-  partner: "RJ",
-  notes: "Tied to next walk with RJ and Argie.",
-  returnDate: "",
-  nextAction: "Next walk with RJ/Argie"
-}, {
-  id: "s14",
-  business: "Cabinet Warehouse",
-  dm: "David Chavez",
-  phone: "",
-  zip: "80223",
-  stage: "Approached",
-  touchCount: 1,
-  lastContact: "2026-06-08",
-  partner: "Argie",
-  notes: "Tied to next walk with RJ and Argie.",
-  returnDate: "",
-  nextAction: "Email David Chavez"
-}, {
-  id: "s15",
-  business: "Color House Denver",
-  dm: "Toby Zalinski",
-  phone: "720-295-2264",
-  zip: "80113",
-  stage: "Presented",
-  touchCount: 1,
-  lastContact: "2026-05-26",
-  partner: "Gianni",
-  notes: "tobyzalinski@icloud.com | Text: 720-782-7557 | Very sweet, genuine yes. | Meeting 11AM 6/9 | 4830 S Broadway, Englewood",
-  returnDate: "2026-06-09",
-  nextAction: "Follow up on presentation"
-}, {
-  id: "s16",
-  business: "Mile High Rentals",
-  dm: "Bill Barbee",
-  phone: "303-789-2537",
-  zip: "80113",
-  stage: "Presented",
-  touchCount: 1,
-  lastContact: "2026-05-26",
-  partner: "Gianni",
-  notes: "mhrsbill@gmail.com | Not talkative but genuine yes. | Meeting 11:30AM 6/9 | 4817 S Broadway",
-  returnDate: "2026-06-09",
-  nextAction: "Follow up on presentation"
-}, {
-  id: "s17",
-  business: "Karpov Construction",
-  dm: "Vladimir",
-  phone: "303-908-2051",
-  zip: "80110",
-  stage: "Approached",
-  touchCount: 1,
-  lastContact: "2026-06-01",
-  partner: "Solo",
-  notes: "Gatekeeper: Stasik. Vladimir direct: (303) 908-2051.",
-  returnDate: "2026-06-01",
-  nextAction: "Call Vladimir to schedule"
-}];
-function blankEntry() {
+function blank() {
   return {
-    id: Date.now().toString(),
-    business: "",
-    dm: "",
-    phone: "",
-    zip: "",
-    stage: "Approached",
-    touchCount: 1,
-    lastContact: new Date().toISOString().split("T")[0],
-    partner: "Solo",
-    notes: "",
-    returnDate: "",
-    nextAction: ""
+    id: "b" + Date.now(),
+    business: "", dm: "", address: "", zip: "", phone: "",
+    stage: "Approached", touchCount: 1,
+    initialTouch: todayISO(), lastContact: todayISO(), followUp: "",
+    partner: "Solo", nextAction: "", notes: "",
+    lat: null, lng: null, updatedAt: nowISO(),
   };
 }
 
-// ── Styles ────────────────────────────────────────────────────────────────────
-var SI = {
-  width: "100%",
-  background: "#1E293B",
-  border: "1px solid #2A3141",
-  borderRadius: 8,
-  padding: "9px 12px",
-  color: "#F1F5F9",
-  fontSize: 13,
-  outline: "none",
-  fontFamily: "inherit",
-  boxSizing: "border-box"
-};
+// ─────────────────────────────────────────────────────────────────────────────
+// Follow-up urgency
+// ─────────────────────────────────────────────────────────────────────────────
+function urgency(followUp) {
+  if (!followUp) return { label: "—", color: "#475569", days: 99999, pulse: false };
+  const t = new Date(); t.setHours(0, 0, 0, 0);
+  const d = new Date(followUp + "T00:00:00");
+  const diff = Math.round((d - t) / 86400000);
+  if (diff < 0)  return { label: Math.abs(diff) + "d late", color: "#EF4444", days: diff, pulse: true };
+  if (diff === 0) return { label: "Today", color: "#F59E0B", days: 0, pulse: true };
+  if (diff <= 3) return { label: diff + "d", color: "#F59E0B", days: diff, pulse: false };
+  if (diff <= 7) return { label: diff + "d", color: "#84CC16", days: diff, pulse: false };
+  return { label: diff + "d", color: "#22C55E", days: diff, pulse: false };
+}
+const byUrgency = arr => [...arr].sort((a, b) => urgency(a.followUp).days - urgency(b.followUp).days);
 
-// ── Main app ──────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Shared styles
+// ─────────────────────────────────────────────────────────────────────────────
+const INPUT = {
+  width: "100%", background: "#1E293B", border: "1px solid #2A3141", borderRadius: 8,
+  padding: "10px 12px", color: "#F1F5F9", fontSize: 14, outline: "none", boxSizing: "border-box",
+};
+const LABEL = { fontSize: 10, fontWeight: 800, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4, display: "block" };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// App
+// ─────────────────────────────────────────────────────────────────────────────
 function App() {
-  var _useState = useState([]),
-    _useState2 = _slicedToArray(_useState, 2),
-    entries = _useState2[0],
-    setEntries = _useState2[1];
-  var _useState3 = useState(true),
-    _useState4 = _slicedToArray(_useState3, 2),
-    loading = _useState4[0],
-    setLoading = _useState4[1];
-  var _useState5 = useState("All"),
-    _useState6 = _slicedToArray(_useState5, 2),
-    filterStage = _useState6[0],
-    setFilterStage = _useState6[1];
-  var _useState7 = useState("All"),
-    _useState8 = _slicedToArray(_useState7, 2),
-    filterPartner = _useState8[0],
-    setFilterPartner = _useState8[1];
-  var _useState9 = useState(false),
-    _useState0 = _slicedToArray(_useState9, 2),
-    showClosed = _useState0[0],
-    setShowClosed = _useState0[1];
-  var _useState1 = useState(""),
-    _useState10 = _slicedToArray(_useState1, 2),
-    search = _useState10[0],
-    setSearch = _useState10[1];
-  var _useState11 = useState(null),
-    _useState12 = _slicedToArray(_useState11, 2),
-    expandedId = _useState12[0],
-    setExpandedId = _useState12[1];
-  var _useState13 = useState(null),
-    _useState14 = _slicedToArray(_useState13, 2),
-    modal = _useState14[0],
-    setModal = _useState14[1];
-  var _useState15 = useState(false),
-    _useState16 = _slicedToArray(_useState15, 2),
-    syncing = _useState16[0],
-    setSyncing = _useState16[1];
-  var _useState17 = useState(''),
-    _useState18 = _slicedToArray(_useState17, 2),
-    syncMsg = _useState18[0],
-    setSyncMsg = _useState18[1];
-  var _useState19 = useState('pipeline'),
-    _useState20 = _slicedToArray(_useState19, 2),
-    activeTab = _useState20[0],
-    setActiveTab = _useState20[1];
-  var _useState21 = useState([]),
-    _useState22 = _slicedToArray(_useState21, 2),
-    prospects = _useState22[0],
-    setProspects = _useState22[1];
-  var _useState23 = useState(false),
-    _useState24 = _slicedToArray(_useState23, 2),
-    prospectSync = _useState24[0],
-    setProspectSync = _useState24[1];
-  var _useState25 = useState(''),
-    _useState26 = _slicedToArray(_useState25, 2),
-    pSyncMsg = _useState26[0],
-    setPSyncMsg = _useState26[1];
-  var _useState27 = useState(''),
-    _useState28 = _slicedToArray(_useState27, 2),
-    pSearch = _useState28[0],
-    setPSearch = _useState28[1];
-  var _useState29 = useState('All'),
-    _useState30 = _slicedToArray(_useState29, 2),
-    pFilterStatus = _useState30[0],
-    setPFilterStatus = _useState30[1];
-  var _useState31 = useState('All'),
-    _useState32 = _slicedToArray(_useState31, 2),
-    pFilterZip = _useState32[0],
-    setPFilterZip = _useState32[1];
-  var _useState33 = useState(null),
-    _useState34 = _slicedToArray(_useState33, 2),
-    pExpanded = _useState34[0],
-    setPExpanded = _useState34[1];
-  var _useState35 = useState(''),
-    _useState36 = _slicedToArray(_useState35, 2),
-    logBiz = _useState36[0],
-    setLogBiz = _useState36[1];
-  var _useState37 = useState(''),
-    _useState38 = _slicedToArray(_useState37, 2),
-    logDM = _useState38[0],
-    setLogDM = _useState38[1];
-  var _useState39 = useState(''),
-    _useState40 = _slicedToArray(_useState39, 2),
-    logNote = _useState40[0],
-    setLogNote = _useState40[1];
-  var _useState41 = useState(''),
-    _useState42 = _slicedToArray(_useState41, 2),
-    logOutcome = _useState42[0],
-    setLogOutcome = _useState42[1];
-  var _useState43 = useState(false),
-    _useState44 = _slicedToArray(_useState43, 2),
-    logSubmitting = _useState44[0],
-    setLogSubmitting = _useState44[1];
-  var _useState45 = useState(''),
-    _useState46 = _slicedToArray(_useState45, 2),
-    logSuccess = _useState46[0],
-    setLogSuccess = _useState46[1];
-  var _useState47 = useState(null),
-    _useState48 = _slicedToArray(_useState47, 2),
-    form = _useState48[0],
-    setForm = _useState48[1];
-  useEffect(function () {
-    var r = lsGet("aflac:pipeline");
-    setEntries(r ? JSON.parse(r.value) : SEED);
-    if (!r) lsSet("aflac:pipeline", JSON.stringify(SEED));
-    setLoading(false);
+  const [businesses, setBusinesses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState("list");
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("All");
+  const [showClosed, setShowClosed] = useState(false);
+  const [expanded, setExpanded] = useState(null);
+  const [editing, setEditing] = useState(null); // business object or null
+  const [toast, setToast] = useState("");
+
+  useEffect(() => {
+    const local = loadLocal();
+    if (local && local.length) { setBusinesses(local); setLoading(false); return; }
+    // First run: seed from repo
+    fetch(SEED_URL).then(r => r.json()).then(j => {
+      const seed = j.businesses || [];
+      setBusinesses(seed); saveLocal(seed);
+    }).catch(() => setBusinesses([])).finally(() => setLoading(false));
   }, []);
-  function persist(_x3) {
-    return _persist.apply(this, arguments);
+
+  function commit(next, msg) {
+    setBusinesses(next);
+    saveLocal(next);
+    if (msg) { setToast(msg); setTimeout(() => setToast(""), 2600); }
   }
-  function _persist() {
-    _persist = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(next) {
-      var changed,
-        _args = arguments;
-      return _regenerator().w(function (_context) {
-        while (1) switch (_context.n) {
-          case 0:
-            changed = _args.length > 1 && _args[1] !== undefined ? _args[1] : null;
-            setEntries(next);
-            lsSet("aflac:pipeline", JSON.stringify(next));
-            if (changed) syncToDrive("upsert", {
-              data: changed
-            });
-          case 1:
-            return _context.a(2);
-        }
-      }, _callee);
-    }));
-    return _persist.apply(this, arguments);
+  function upsert(biz) {
+    const stamped = { ...biz, updatedAt: nowISO() };
+    const exists = businesses.some(b => b.id === stamped.id);
+    const next = exists ? businesses.map(b => b.id === stamped.id ? stamped : b) : [...businesses, stamped];
+    commit(next, exists ? "Saved " + stamped.business : "Added " + stamped.business);
   }
-  var openAdd = function openAdd() {
-    setForm(blankEntry());
-    setModal("add");
-  };
-  var openEdit = function openEdit(e) {
-    setForm(_objectSpread({}, e));
-    setModal("edit");
-  };
-  function saveForm() {
-    return _saveForm.apply(this, arguments);
+  function remove(id) {
+    const b = businesses.find(x => x.id === id);
+    commit(businesses.filter(x => x.id !== id), b ? "Deleted " + b.business : "Deleted");
+    setEditing(null);
   }
-  function _saveForm() {
-    _saveForm = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
-      var _form$business;
-      var saved, next;
-      return _regenerator().w(function (_context2) {
-        while (1) switch (_context2.n) {
-          case 0:
-            if (form !== null && form !== void 0 && (_form$business = form.business) !== null && _form$business !== void 0 && _form$business.trim()) {
-              _context2.n = 1;
-              break;
-            }
-            return _context2.a(2);
-          case 1:
-            saved = modal === "add" ? _objectSpread(_objectSpread({}, form), {}, {
-              id: Date.now().toString()
-            }) : form;
-            next = modal === "add" ? [].concat(_toConsumableArray(entries), [saved]) : entries.map(function (e) {
-              return e.id === form.id ? saved : e;
-            });
-            _context2.n = 2;
-            return persist(next, saved);
-          case 2:
-            setModal(null);
-            setForm(null);
-          case 3:
-            return _context2.a(2);
-        }
-      }, _callee2);
-    }));
-    return _saveForm.apply(this, arguments);
+  function addTouch(id) {
+    const next = businesses.map(b => b.id === id
+      ? { ...b, touchCount: (b.touchCount || 0) + 1, lastContact: todayISO(), updatedAt: nowISO() }
+      : b);
+    const b = next.find(x => x.id === id);
+    commit(next, "+1 touch · " + b.business + " (T" + b.touchCount + ")");
   }
-  function handleProspectSync() {
-    return _handleProspectSync.apply(this, arguments);
-  } // Load prospects from localStorage on mount
-  function _handleProspectSync() {
-    _handleProspectSync = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
-      var data, _t;
-      return _regenerator().w(function (_context3) {
-        while (1) switch (_context3.p = _context3.n) {
-          case 0:
-            setProspectSync(true);
-            setPSyncMsg('');
-            _context3.p = 1;
-            _context3.n = 2;
-            return fetchProspectLog();
-          case 2:
-            data = _context3.v;
-            lsSet("aflac:prospects", JSON.stringify(data));
-            setProspects(data);
-            setPSyncMsg("Synced ".concat(data.length, " prospects from Drive"));
-            setTimeout(function () {
-              return setPSyncMsg('');
-            }, 3000);
-            _context3.n = 4;
-            break;
-          case 3:
-            _context3.p = 3;
-            _t = _context3.v;
-            setPSyncMsg('Sync failed — check connection');
-            setTimeout(function () {
-              return setPSyncMsg('');
-            }, 3000);
-          case 4:
-            setProspectSync(false);
-          case 5:
-            return _context3.a(2);
-        }
-      }, _callee3, null, [[1, 3]]);
-    }));
-    return _handleProspectSync.apply(this, arguments);
+  function advance(id) {
+    const b = businesses.find(x => x.id === id);
+    const i = CYCLE.indexOf(b.stage);
+    if (i < 0 || i >= CYCLE.length - 1) return;
+    const stage = CYCLE[i + 1];
+    commit(businesses.map(x => x.id === id ? { ...x, stage, lastContact: todayISO(), updatedAt: nowISO() } : x),
+      b.business + " → " + stage);
   }
-  useEffect(function () {
-    var r = lsGet("aflac:prospects");
-    if (r) setProspects(JSON.parse(r.value));
-  }, []);
-  function handleLogTouch() {
-    return _handleLogTouch.apply(this, arguments);
+  // Called by the Map tab once a business gets geocoded, to cache lat/lng.
+  function setCoords(id, lat, lng) {
+    setBusinesses(prev => {
+      const next = prev.map(b => b.id === id ? { ...b, lat, lng, updatedAt: nowISO() } : b);
+      saveLocal(next);
+      return next;
+    });
   }
-  function _handleLogTouch() {
-    _handleLogTouch = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
-      var today, OUTCOME_STAGE, existing, entry, next;
-      return _regenerator().w(function (_context4) {
-        while (1) switch (_context4.n) {
-          case 0:
-            if (!(!logBiz.trim() || !logOutcome)) {
-              _context4.n = 1;
-              break;
-            }
-            return _context4.a(2);
-          case 1:
-            setLogSubmitting(true);
-            today = new Date().toISOString().split('T')[0];
-            OUTCOME_STAGE = {
-              'Gatekeeper': 'Approached',
-              'Not In': 'Approached',
-              'Come Back': 'Warm',
-              'Booked Meeting': 'Meeting Set',
-              'Interested': 'Warm',
-              'DNC': 'Dead'
-            };
-            existing = entries.find(function (e) {
-              return e.business.toLowerCase().trim() === logBiz.toLowerCase().trim();
-            });
-            entry = {
-              id: existing ? existing.id : Date.now().toString(),
-              business: logBiz.trim(),
-              dm: logDM.trim() || (existing ? existing.dm : ''),
-              phone: existing ? existing.phone : '',
-              zip: existing ? existing.zip : '',
-              stage: OUTCOME_STAGE[logOutcome] || 'Approached',
-              touchCount: existing ? existing.touchCount + 1 : 1,
-              lastContact: today,
-              partner: 'Solo',
-              notes: logNote.trim() ? existing !== null && existing !== void 0 && existing.notes ? existing.notes + ' | ' + today + ': ' + logNote.trim() : today + ': ' + logNote.trim() : (existing === null || existing === void 0 ? void 0 : existing.notes) || '',
-              returnDate: logOutcome === 'Come Back' || logOutcome === 'Booked Meeting' ? (existing === null || existing === void 0 ? void 0 : existing.returnDate) || '' : (existing === null || existing === void 0 ? void 0 : existing.returnDate) || '',
-              nextAction: logOutcome === 'Booked Meeting' ? 'Prepare discovery meeting' : logOutcome === 'Come Back' ? 'Return in person' : logOutcome === 'Interested' ? 'Follow up call' : logOutcome === 'Gatekeeper' ? 'Return and ask for ' + (logDM.trim() || 'owner') : logOutcome === 'Not In' ? 'Return and try again' : ''
-            };
-            next = existing ? entries.map(function (e) {
-              return e.id === entry.id ? entry : e;
-            }) : [].concat(_toConsumableArray(entries), [entry]);
-            _context4.n = 2;
-            return persist(next, entry);
-          case 2:
-            setLogSuccess(logOutcome + ' logged for ' + logBiz.trim());
-            setLogBiz('');
-            setLogDM('');
-            setLogNote('');
-            setLogOutcome('');
-            setTimeout(function () {
-              return setLogSuccess('');
-            }, 3000);
-            setLogSubmitting(false);
-          case 3:
-            return _context4.a(2);
-        }
-      }, _callee4);
-    }));
-    return _handleLogTouch.apply(this, arguments);
-  }
-  function deleteEntry() {
-    return _deleteEntry.apply(this, arguments);
-  }
-  function _deleteEntry() {
-    _deleteEntry = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
-      return _regenerator().w(function (_context5) {
-        while (1) switch (_context5.n) {
-          case 0:
-            syncToDrive("delete", {
-              business: form.business
-            });
-            _context5.n = 1;
-            return persist(entries.filter(function (e) {
-              return e.id !== form.id;
-            }));
-          case 1:
-            setModal(null);
-            setForm(null);
-          case 2:
-            return _context5.a(2);
-        }
-      }, _callee5);
-    }));
-    return _deleteEntry.apply(this, arguments);
-  }
-  function handleSync() {
-    return _handleSync.apply(this, arguments);
-  }
-  function _handleSync() {
-    _handleSync = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
-      var fresh, _t2;
-      return _regenerator().w(function (_context6) {
-        while (1) switch (_context6.p = _context6.n) {
-          case 0:
-            setSyncing(true);
-            setSyncMsg('');
-            _context6.p = 1;
-            _context6.n = 2;
-            return fetchFromDrive();
-          case 2:
-            fresh = _context6.v;
-            lsSet("aflac:pipeline", JSON.stringify(fresh));
-            setEntries(fresh);
-            setSyncMsg("Synced ".concat(fresh.length, " entries from Drive"));
-            setTimeout(function () {
-              return setSyncMsg('');
-            }, 3000);
-            _context6.n = 4;
-            break;
-          case 3:
-            _context6.p = 3;
-            _t2 = _context6.v;
-            setSyncMsg('Sync failed — check connection');
-            setTimeout(function () {
-              return setSyncMsg('');
-            }, 3000);
-          case 4:
-            setSyncing(false);
-          case 5:
-            return _context6.a(2);
-        }
-      }, _callee6, null, [[1, 3]]);
-    }));
-    return _handleSync.apply(this, arguments);
-  }
-  function addTouch(_x4, _x5) {
-    return _addTouch.apply(this, arguments);
-  }
-  function _addTouch() {
-    _addTouch = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(id, ev) {
-      var updated, changed;
-      return _regenerator().w(function (_context7) {
-        while (1) switch (_context7.n) {
-          case 0:
-            ev.stopPropagation();
-            updated = entries.map(function (e) {
-              return e.id === id ? _objectSpread(_objectSpread({}, e), {}, {
-                touchCount: e.touchCount + 1,
-                lastContact: new Date().toISOString().split("T")[0]
-              }) : e;
-            });
-            changed = updated.find(function (e) {
-              return e.id === id;
-            });
-            _context7.n = 1;
-            return persist(updated, changed);
-          case 1:
-            return _context7.a(2);
-        }
-      }, _callee7);
-    }));
-    return _addTouch.apply(this, arguments);
-  }
-  var today = new Date();
-  today.setHours(0, 0, 0, 0);
-  var visible = sortByUrgency(entries.filter(function (e) {
-    if (!showClosed && (e.stage === "Dead" || e.stage === "Client")) return false;
-    if (filterStage !== "All" && e.stage !== filterStage) return false;
-    if (filterPartner !== "All" && e.partner !== filterPartner) return false;
-    if (search) {
-      var q = search.toLowerCase();
-      return e.business.toLowerCase().includes(q) || (e.dm || "").toLowerCase().includes(q) || e.zip.includes(q);
-    }
-    return true;
-  }));
-  var dueNow = entries.filter(function (e) {
-    if (!e.returnDate || e.stage === "Dead" || e.stage === "Client") return false;
-    var d = new Date(e.returnDate + "T00:00:00");
-    d.setHours(0, 0, 0, 0);
-    return d <= today;
+
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const active = businesses.filter(b => b.stage !== "Dead" && b.stage !== "Client").length;
+  const dueNow = businesses.filter(b => {
+    if (!b.followUp || b.stage === "Dead" || b.stage === "Client") return false;
+    return new Date(b.followUp + "T00:00:00") <= today;
   }).length;
-  var dueWeek = entries.filter(function (e) {
-    if (!e.returnDate || e.stage === "Dead" || e.stage === "Client") return false;
-    var d = new Date(e.returnDate + "T00:00:00");
-    d.setHours(0, 0, 0, 0);
-    var diff = Math.round((d - today) / 86400000);
+  const dueWeek = businesses.filter(b => {
+    if (!b.followUp || b.stage === "Dead" || b.stage === "Client") return false;
+    const diff = Math.round((new Date(b.followUp + "T00:00:00") - today) / 86400000);
     return diff >= 0 && diff <= 7;
   }).length;
-  var active = entries.filter(function (e) {
-    return e.stage !== "Dead" && e.stage !== "Client";
-  }).length;
-  if (loading) return /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: "#0D1117",
-      minHeight: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: "#F59E0B",
-      fontSize: 15
-    }
-  }, "Loading\u2026"));
-  var screen = activeTab === 'pipeline' ? /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: "#0D1117",
-      minHeight: "100vh",
-      paddingBottom: 80
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "env(safe-area-inset-top, 20px) 16px 0 16px",
-      paddingTop: "max(env(safe-area-inset-top), 20px)",
-      borderBottom: "1px solid #1A2335"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "flex-start",
-      marginBottom: 14
-    }
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      fontWeight: 800,
-      letterSpacing: "0.14em",
-      color: "#F59E0B",
-      textTransform: "uppercase",
-      marginBottom: 3
-    }
-  }, "Bedrock Benefits"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 24,
-      fontWeight: 900,
-      color: "#F1F5F9",
-      letterSpacing: "-0.6px",
-      lineHeight: 1
-    }
-  }, "Pipeline")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 8,
-      alignItems: "center"
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: handleSync,
-    disabled: syncing,
-    style: {
-      background: "transparent",
-      color: syncing ? "#334155" : "#64748B",
-      border: "1px solid #1E293B",
-      borderRadius: 8,
-      padding: "9px 12px",
-      fontSize: 12,
-      fontWeight: 700,
-      cursor: syncing ? "default" : "pointer"
-    }
-  }, syncing ? "Syncing…" : "↓ Sync"), /*#__PURE__*/React.createElement("button", {
-    onClick: openAdd,
-    style: {
-      background: "#F59E0B",
-      color: "#0D1117",
-      border: "none",
-      borderRadius: 8,
-      padding: "9px 18px",
-      fontSize: 13,
-      fontWeight: 800,
-      cursor: "pointer"
-    }
-  }, "+ Add"))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 24,
-      paddingBottom: 16
-    }
-  }, /*#__PURE__*/React.createElement(Stat, {
-    label: "Due now",
-    value: dueNow,
-    color: dueNow > 0 ? "#EF4444" : "#475569"
-  }), /*#__PURE__*/React.createElement(Stat, {
-    label: "This week",
-    value: dueWeek,
-    color: "#F59E0B"
-  }), /*#__PURE__*/React.createElement(Stat, {
-    label: "Active",
-    value: active,
-    color: "#60A5FA"
-  })), syncMsg && /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 11,
-      color: syncMsg.includes('failed') ? '#EF4444' : '#34D399',
-      paddingBottom: 10,
-      textAlign: 'center'
-    }
-  }, syncMsg)), /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "12px 16px 0"
-    }
-  }, /*#__PURE__*/React.createElement("input", {
-    placeholder: "Search business, DM, ZIP\u2026",
-    value: search,
-    onChange: function onChange(e) {
-      return setSearch(e.target.value);
-    },
-    style: _objectSpread(_objectSpread({}, SI), {}, {
-      marginBottom: 10
-    })
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 6,
-      overflowX: "auto",
-      paddingBottom: 8,
-      scrollbarWidth: "none"
-    }
-  }, FILTER_STAGES.map(function (s) {
-    var _STAGES$s;
-    return /*#__PURE__*/React.createElement(Pill, {
-      key: s,
-      label: s,
-      active: filterStage === s,
-      color: ((_STAGES$s = STAGES[s]) === null || _STAGES$s === void 0 ? void 0 : _STAGES$s.color) || "#94A3B8",
-      onClick: function onClick() {
-        return setFilterStage(s);
-      }
-    });
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 6,
-      overflowX: "auto",
-      paddingBottom: 10,
-      scrollbarWidth: "none"
-    }
-  }, ["All"].concat(PARTNERS).map(function (p) {
-    return /*#__PURE__*/React.createElement(Pill, {
-      key: p,
-      label: p,
-      active: filterPartner === p,
-      color: "#94A3B8",
-      onClick: function onClick() {
-        return setFilterPartner(p);
-      }
-    });
-  }))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "0 16px 8px",
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center"
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 11,
-      color: "#475569"
-    }
-  }, visible.length, " showing"), /*#__PURE__*/React.createElement("button", {
-    onClick: function onClick() {
-      return setShowClosed(function (v) {
-        return !v;
-      });
-    },
-    style: {
-      background: "none",
-      border: "none",
-      color: "#475569",
-      fontSize: 11,
-      cursor: "pointer",
-      padding: 0
-    }
-  }, showClosed ? "Hide closed" : "Show closed")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "0 16px"
-    }
-  }, visible.length === 0 && /*#__PURE__*/React.createElement("div", {
-    style: {
-      textAlign: "center",
-      padding: "48px 0",
-      color: "#334155",
-      fontSize: 14
-    }
-  }, "No entries \u2014 tap ", /*#__PURE__*/React.createElement("b", {
-    style: {
-      color: "#F59E0B"
-    }
-  }, "+ Add"), " to log one"), visible.map(function (entry) {
-    return /*#__PURE__*/React.createElement(Card, {
-      key: entry.id,
-      entry: entry,
-      expanded: expandedId === entry.id,
-      onToggle: function onToggle() {
-        return setExpandedId(expandedId === entry.id ? null : entry.id);
-      },
-      onEdit: function onEdit() {
-        return openEdit(entry);
-      },
-      onTouch: function onTouch(ev) {
-        return addTouch(entry.id, ev);
-      }
-    });
-  })), modal && form && /*#__PURE__*/React.createElement(Modal, {
-    mode: modal,
-    form: form,
-    update: function update(k, v) {
-      return setForm(function (f) {
-        return _objectSpread(_objectSpread({}, f), {}, _defineProperty({}, k, v));
-      });
-    },
-    onSave: saveForm,
-    onDelete: deleteEntry,
-    onClose: function onClose() {
-      setModal(null);
-      setForm(null);
-    }
-  }), /*#__PURE__*/React.createElement("style", null, "@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}")) : activeTab === 'log' ?
-  /*#__PURE__*/
-  // ── Log Touch screen ────────────────────────────────────────────────────
-  React.createElement(LogTouchScreen, {
-    biz: logBiz,
-    setBiz: setLogBiz,
-    dm: logDM,
-    setDM: setLogDM,
-    note: logNote,
-    setNote: setLogNote,
-    outcome: logOutcome,
-    setOutcome: setLogOutcome,
-    onSubmit: handleLogTouch,
-    submitting: logSubmitting,
-    success: logSuccess,
-    recentEntries: entries.filter(function (e) {
-      return e.lastContact === new Date().toISOString().split('T')[0];
-    }).slice(-5).reverse()
-  }) :
-  /*#__PURE__*/
-  // ── Prospect Log screen ─────────────────────────────────────────────────
-  React.createElement(ProspectLogScreen, {
-    prospects: prospects,
-    syncing: prospectSync,
-    syncMsg: pSyncMsg,
-    onSync: handleProspectSync,
-    search: pSearch,
-    setSearch: setPSearch,
-    filterStatus: pFilterStatus,
-    setFilterStatus: setPFilterStatus,
-    filterZip: pFilterZip,
-    setFilterZip: setPFilterZip,
-    expanded: pExpanded,
-    setExpanded: setPExpanded
-  });
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: "#0D1117",
-      minHeight: "100vh"
-    }
-  }, screen, /*#__PURE__*/React.createElement(TabBar, {
-    active: activeTab,
-    setActive: setActiveTab
-  }));
-}
-function Stat(_ref) {
-  var label = _ref.label,
-    value = _ref.value,
-    color = _ref.color;
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 22,
-      fontWeight: 900,
-      color: color,
-      lineHeight: 1
-    }
-  }, value), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      color: "#475569",
-      fontWeight: 700,
-      letterSpacing: "0.1em",
-      textTransform: "uppercase",
-      marginTop: 3
-    }
-  }, label));
-}
-function Pill(_ref2) {
-  var label = _ref2.label,
-    active = _ref2.active,
-    color = _ref2.color,
-    onClick = _ref2.onClick;
-  return /*#__PURE__*/React.createElement("button", {
-    onClick: onClick,
-    style: {
-      background: active ? color : "transparent",
-      color: active ? "#0D1117" : "#475569",
-      border: "1px solid ".concat(active ? color : "#1E293B"),
-      borderRadius: 20,
-      padding: "4px 11px",
-      fontSize: 10,
-      fontWeight: 700,
-      cursor: "pointer",
-      whiteSpace: "nowrap",
-      letterSpacing: "0.05em",
-      flexShrink: 0
-    }
-  }, label);
-}
-function Card(_ref3) {
-  var entry = _ref3.entry,
-    expanded = _ref3.expanded,
-    onToggle = _ref3.onToggle,
-    onEdit = _ref3.onEdit,
-    onTouch = _ref3.onTouch;
-  var u = getUrgency(entry.returnDate);
-  var s = STAGES[entry.stage] || STAGES.Approached;
-  return /*#__PURE__*/React.createElement("div", {
-    onClick: onToggle,
-    style: {
-      background: "#131923",
-      borderRadius: 10,
-      marginBottom: 7,
-      border: "1px solid #1A2335",
-      borderLeft: "4px solid ".concat(u.color),
-      cursor: "pointer",
-      overflow: "hidden",
-      animation: u.pulse ? "pulse 2s infinite" : "none"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "12px 12px 10px"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "flex-start",
-      gap: 8
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      flex: 1,
-      minWidth: 0
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 15,
-      fontWeight: 700,
-      color: "#F1F5F9",
-      marginBottom: 1,
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-      whiteSpace: "nowrap"
-    }
-  }, entry.business), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 12,
-      color: "#64748B",
-      marginBottom: 7
-    }
-  }, entry.dm || "—", entry.phone ? " \xB7 ".concat(entry.phone) : ""), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      flexWrap: "wrap",
-      gap: 5,
-      alignItems: "center"
-    }
-  }, /*#__PURE__*/React.createElement(Badge, {
-    bg: s.bg,
-    color: s.color
-  }, entry.stage), /*#__PURE__*/React.createElement(Badge, {
-    bg: "#1A2335",
-    color: "#475569"
-  }, "T", entry.touchCount), /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 10,
-      color: "#334155",
-      fontWeight: 600
-    }
-  }, entry.zip), entry.partner !== "Solo" && /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 10,
-      color: "#60A5FA",
-      fontWeight: 600
-    }
-  }, "w/", entry.partner))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      textAlign: "right",
-      flexShrink: 0
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
-      fontWeight: 900,
-      color: u.color,
-      lineHeight: 1,
-      marginBottom: 2
-    }
-  }, u.label), entry.returnDate && /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      color: "#334155"
-    }
-  }, entry.returnDate.slice(5).replace("-", "/"))))), expanded && /*#__PURE__*/React.createElement("div", {
-    style: {
-      borderTop: "1px solid #1A2335",
-      padding: "10px 12px"
-    },
-    onClick: function onClick(e) {
-      return e.stopPropagation();
-    }
-  }, entry.nextAction && /*#__PURE__*/React.createElement(Sec, {
-    label: "Next action",
-    color: "#F59E0B"
-  }, entry.nextAction), entry.notes && /*#__PURE__*/React.createElement(Sec, {
-    label: "Notes",
-    color: "#475569"
-  }, entry.notes), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      color: "#334155",
-      marginBottom: 12
-    }
-  }, "Last contact: ", entry.lastContact || "—"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 8
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: onTouch,
-    style: {
-      flex: 1,
-      background: "#1A2335",
-      color: "#64748B",
-      border: "1px solid #1E293B",
-      borderRadius: 7,
-      padding: "8px 0",
-      fontSize: 12,
-      fontWeight: 700,
-      cursor: "pointer"
-    }
-  }, "+1 Touch"), /*#__PURE__*/React.createElement("button", {
-    onClick: function onClick(e) {
-      e.stopPropagation();
-      onEdit();
-    },
-    style: {
-      flex: 1,
-      background: "#F59E0B",
-      color: "#0D1117",
-      border: "none",
-      borderRadius: 7,
-      padding: "8px 0",
-      fontSize: 12,
-      fontWeight: 700,
-      cursor: "pointer"
-    }
-  }, "Edit"))));
-}
-function Badge(_ref4) {
-  var children = _ref4.children,
-    bg = _ref4.bg,
-    color = _ref4.color;
-  return /*#__PURE__*/React.createElement("span", {
-    style: {
-      background: bg,
-      color: color,
-      borderRadius: 4,
-      padding: "2px 7px",
-      fontSize: 9,
-      fontWeight: 800,
-      letterSpacing: "0.07em",
-      textTransform: "uppercase"
-    }
-  }, children);
-}
-function Sec(_ref5) {
-  var label = _ref5.label,
-    color = _ref5.color,
-    children = _ref5.children;
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 9
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      fontWeight: 800,
-      color: color,
-      textTransform: "uppercase",
-      letterSpacing: "0.1em",
-      marginBottom: 3
-    }
-  }, label), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
-      color: "#94A3B8",
-      lineHeight: 1.55
-    }
-  }, children));
-}
-function Modal(_ref6) {
-  var mode = _ref6.mode,
-    form = _ref6.form,
-    update = _ref6.update,
-    onSave = _ref6.onSave,
-    onDelete = _ref6.onDelete,
-    onClose = _ref6.onClose;
-  var isEdit = mode === "edit";
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: "fixed",
-      inset: 0,
-      background: "rgba(0,0,0,0.85)",
-      zIndex: 200,
-      display: "flex",
-      alignItems: "flex-end",
-      justifyContent: "center"
-    },
-    onClick: onClose
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: "#131923",
-      borderRadius: "16px 16px 0 0",
-      width: "100%",
-      maxWidth: 520,
-      padding: "20px 16px 36px",
-      maxHeight: "88vh",
-      overflowY: "auto",
-      paddingBottom: "max(36px, env(safe-area-inset-bottom))"
-    },
-    onClick: function onClick(e) {
-      return e.stopPropagation();
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: 18
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 16,
-      fontWeight: 800,
-      color: "#F1F5F9"
-    }
-  }, isEdit ? "Edit Entry" : "Add Entry"), /*#__PURE__*/React.createElement("button", {
-    onClick: onClose,
-    style: {
-      background: "none",
-      border: "none",
-      color: "#475569",
-      fontSize: 22,
-      cursor: "pointer",
-      lineHeight: 1
-    }
-  }, "\xD7")), /*#__PURE__*/React.createElement(F, {
-    label: "Business *"
-  }, /*#__PURE__*/React.createElement("input", {
-    style: SI,
-    value: form.business,
-    onChange: function onChange(e) {
-      return update("business", e.target.value);
-    },
-    placeholder: "Business name"
-  })), /*#__PURE__*/React.createElement(F, {
-    label: "Decision Maker"
-  }, /*#__PURE__*/React.createElement("input", {
-    style: SI,
-    value: form.dm,
-    onChange: function onChange(e) {
-      return update("dm", e.target.value);
-    },
-    placeholder: "Owner / DM name"
-  })), /*#__PURE__*/React.createElement(F, {
-    label: "Phone"
-  }, /*#__PURE__*/React.createElement("input", {
-    style: SI,
-    value: form.phone,
-    onChange: function onChange(e) {
-      return update("phone", e.target.value);
-    },
-    placeholder: "Phone number"
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 10
-    }
-  }, /*#__PURE__*/React.createElement(F, {
-    label: "ZIP",
-    style: {
-      flex: 1
-    }
-  }, /*#__PURE__*/React.createElement("input", {
-    style: SI,
-    value: form.zip,
-    onChange: function onChange(e) {
-      return update("zip", e.target.value);
-    },
-    placeholder: "80110"
-  })), /*#__PURE__*/React.createElement(F, {
-    label: "Touch #",
-    style: {
-      flex: 1
-    }
-  }, /*#__PURE__*/React.createElement("input", {
-    style: SI,
-    type: "number",
-    value: form.touchCount,
-    onChange: function onChange(e) {
-      return update("touchCount", parseInt(e.target.value) || 1);
-    }
-  }))), /*#__PURE__*/React.createElement(F, {
-    label: "Stage"
-  }, /*#__PURE__*/React.createElement("select", {
-    style: SI,
-    value: form.stage,
-    onChange: function onChange(e) {
-      return update("stage", e.target.value);
-    }
-  }, STAGE_NAMES.map(function (s) {
-    return /*#__PURE__*/React.createElement("option", {
-      key: s
-    }, s);
-  }))), /*#__PURE__*/React.createElement(F, {
-    label: "Partner"
-  }, /*#__PURE__*/React.createElement("select", {
-    style: SI,
-    value: form.partner,
-    onChange: function onChange(e) {
-      return update("partner", e.target.value);
-    }
-  }, PARTNERS.map(function (p) {
-    return /*#__PURE__*/React.createElement("option", {
-      key: p
-    }, p);
-  }))), /*#__PURE__*/React.createElement(F, {
-    label: "Return Date"
-  }, /*#__PURE__*/React.createElement("input", {
-    style: SI,
-    type: "date",
-    value: form.returnDate,
-    onChange: function onChange(e) {
-      return update("returnDate", e.target.value);
-    }
-  })), /*#__PURE__*/React.createElement(F, {
-    label: "Next Action"
-  }, /*#__PURE__*/React.createElement("input", {
-    style: SI,
-    value: form.nextAction,
-    onChange: function onChange(e) {
-      return update("nextAction", e.target.value);
-    },
-    placeholder: "What to do next"
-  })), /*#__PURE__*/React.createElement(F, {
-    label: "Notes"
-  }, /*#__PURE__*/React.createElement("textarea", {
-    style: _objectSpread(_objectSpread({}, SI), {}, {
-      resize: "vertical",
-      lineHeight: 1.5
-    }),
-    rows: 3,
-    value: form.notes,
-    onChange: function onChange(e) {
-      return update("notes", e.target.value);
-    },
-    placeholder: "DM context, objections, referral source\u2026"
-  })), /*#__PURE__*/React.createElement("button", {
-    onClick: onSave,
-    style: {
-      width: "100%",
-      background: "#F59E0B",
-      color: "#0D1117",
-      border: "none",
-      borderRadius: 9,
-      padding: "14px 0",
-      fontSize: 14,
-      fontWeight: 800,
-      cursor: "pointer",
-      marginTop: 6
-    }
-  }, isEdit ? "Save Changes" : "Add to Pipeline"), isEdit && /*#__PURE__*/React.createElement("button", {
-    onClick: onDelete,
-    style: {
-      width: "100%",
-      background: "transparent",
-      color: "#EF4444",
-      border: "1px solid #1E293B",
-      borderRadius: 9,
-      padding: "12px 0",
-      fontSize: 13,
-      fontWeight: 700,
-      cursor: "pointer",
-      marginTop: 8
-    }
-  }, "Remove from Pipeline")));
-}
-function F(_ref7) {
-  var label = _ref7.label,
-    children = _ref7.children,
-    style = _ref7.style;
-  return /*#__PURE__*/React.createElement("div", {
-    style: _objectSpread({
-      marginBottom: 12
-    }, style)
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      fontWeight: 800,
-      color: "#475569",
-      textTransform: "uppercase",
-      letterSpacing: "0.1em",
-      marginBottom: 4
-    }
-  }, label), children);
-}
 
-// ── Log Touch Screen ──────────────────────────────────────────────────────────
-var OUTCOMES = [{
-  label: "Gatekeeper",
-  color: "#60A5FA"
-}, {
-  label: "Not In",
-  color: "#64748B"
-}, {
-  label: "Come Back",
-  color: "#FBBF24"
-}, {
-  label: "Interested",
-  color: "#A78BFA"
-}, {
-  label: "Booked Meeting",
-  color: "#34D399"
-}, {
-  label: "DNC",
-  color: "#EF4444"
-}];
-function LogTouchScreen(_ref8) {
-  var biz = _ref8.biz,
-    setBiz = _ref8.setBiz,
-    dm = _ref8.dm,
-    setDM = _ref8.setDM,
-    note = _ref8.note,
-    setNote = _ref8.setNote,
-    outcome = _ref8.outcome,
-    setOutcome = _ref8.setOutcome,
-    onSubmit = _ref8.onSubmit,
-    submitting = _ref8.submitting,
-    success = _ref8.success,
-    recentEntries = _ref8.recentEntries;
-  var ready = biz.trim() && outcome;
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: "#0D1117",
-      minHeight: "100vh",
-      paddingBottom: 80,
-      fontFamily: "-apple-system,BlinkMacSystemFont,system-ui,sans-serif",
-      color: "#F1F5F9"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "max(env(safe-area-inset-top),20px) 16px 16px",
-      borderBottom: "1px solid #1A2335"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      fontWeight: 800,
-      letterSpacing: "0.14em",
-      color: "#F59E0B",
-      textTransform: "uppercase",
-      marginBottom: 3
-    }
-  }, "Bedrock Benefits"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 24,
-      fontWeight: 900,
-      letterSpacing: "-0.6px",
-      lineHeight: 1
-    }
-  }, "Log Touch")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "20px 16px 0"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 16
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      fontWeight: 800,
-      color: "#475569",
-      textTransform: "uppercase",
-      letterSpacing: "0.1em",
-      marginBottom: 6
-    }
-  }, "Business *"), /*#__PURE__*/React.createElement("input", {
-    value: biz,
-    onChange: function onChange(e) {
-      return setBiz(e.target.value);
-    },
-    placeholder: "Business name",
-    autoComplete: "off",
-    style: {
-      width: "100%",
-      background: "#1E293B",
-      border: "1px solid #2A3141",
-      borderRadius: 8,
-      padding: "12px 14px",
-      color: "#F1F5F9",
-      fontSize: 16,
-      outline: "none",
-      fontFamily: "inherit",
-      boxSizing: "border-box"
-    }
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 20
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      fontWeight: 800,
-      color: "#475569",
-      textTransform: "uppercase",
-      letterSpacing: "0.1em",
-      marginBottom: 6
-    }
-  }, "Owner / DM name ", /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: "#334155",
-      fontWeight: 400
-    }
-  }, "(optional)")), /*#__PURE__*/React.createElement("input", {
-    value: dm,
-    onChange: function onChange(e) {
-      return setDM(e.target.value);
-    },
-    placeholder: "If you got the name",
-    style: {
-      width: "100%",
-      background: "#1E293B",
-      border: "1px solid #2A3141",
-      borderRadius: 8,
-      padding: "12px 14px",
-      color: "#F1F5F9",
-      fontSize: 16,
-      outline: "none",
-      fontFamily: "inherit",
-      boxSizing: "border-box"
-    }
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 20
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      fontWeight: 800,
-      color: "#475569",
-      textTransform: "uppercase",
-      letterSpacing: "0.1em",
-      marginBottom: 10
-    }
-  }, "Outcome *"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      gap: 8
-    }
-  }, OUTCOMES.map(function (o) {
-    return /*#__PURE__*/React.createElement("button", {
-      key: o.label,
-      onPointerDown: function onPointerDown(e) {
-        e.preventDefault();
-        setOutcome(o.label);
-      },
-      style: {
-        padding: "14px 8px",
-        borderRadius: 10,
-        border: "2px solid",
-        borderColor: outcome === o.label ? o.color : "#1E293B",
-        background: outcome === o.label ? "".concat(o.color, "22") : "#131923",
-        color: outcome === o.label ? o.color : "#475569",
-        fontSize: 13,
-        fontWeight: 700,
-        cursor: "pointer",
-        transition: "all 0.12s",
-        WebkitTapHighlightColor: "transparent",
-        textAlign: "center"
-      }
-    }, o.label);
-  }))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 24
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      fontWeight: 800,
-      color: "#475569",
-      textTransform: "uppercase",
-      letterSpacing: "0.1em",
-      marginBottom: 6
-    }
-  }, "Quick note ", /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: "#334155",
-      fontWeight: 400
-    }
-  }, "(optional)")), /*#__PURE__*/React.createElement("input", {
-    value: note,
-    onChange: function onChange(e) {
-      return setNote(e.target.value);
-    },
-    placeholder: "Gatekeeper name, fleet size, callback time\u2026",
-    style: {
-      width: "100%",
-      background: "#1E293B",
-      border: "1px solid #2A3141",
-      borderRadius: 8,
-      padding: "12px 14px",
-      color: "#F1F5F9",
-      fontSize: 15,
-      outline: "none",
-      fontFamily: "inherit",
-      boxSizing: "border-box"
-    }
-  })), /*#__PURE__*/React.createElement("button", {
-    onPointerDown: function onPointerDown(e) {
-      e.preventDefault();
-      if (ready && !submitting) onSubmit();
-    },
-    disabled: !ready || submitting,
-    style: {
-      width: "100%",
-      padding: "16px 0",
-      borderRadius: 10,
-      border: "none",
-      background: ready ? "#F59E0B" : "#1E293B",
-      color: ready ? "#0D1117" : "#334155",
-      fontSize: 15,
-      fontWeight: 900,
-      cursor: ready ? "pointer" : "default",
-      transition: "all 0.15s",
-      WebkitTapHighlightColor: "transparent",
-      marginBottom: 8
-    }
-  }, submitting ? "Saving…" : "Log Touch"), success && /*#__PURE__*/React.createElement("div", {
-    style: {
-      textAlign: "center",
-      fontSize: 13,
-      color: "#34D399",
-      fontWeight: 700,
-      padding: "8px 0",
-      animation: "fadeIn 0.2s ease"
-    }
-  }, "\u2713 ", success), recentEntries.length > 0 && /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 24
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      fontWeight: 800,
-      color: "#334155",
-      textTransform: "uppercase",
-      letterSpacing: "0.1em",
-      marginBottom: 10
-    }
-  }, "Logged today"), recentEntries.map(function (e) {
-    var _STAGES$e$stage;
-    return /*#__PURE__*/React.createElement("div", {
-      key: e.id,
-      style: {
-        background: "#131923",
-        borderRadius: 8,
-        padding: "10px 12px",
-        marginBottom: 6,
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        borderLeft: "3px solid ".concat(((_STAGES$e$stage = STAGES[e.stage]) === null || _STAGES$e$stage === void 0 ? void 0 : _STAGES$e$stage.color) || "#475569")
-      }
-    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 13,
-        fontWeight: 700,
-        color: "#F1F5F9"
-      }
-    }, e.business), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 11,
-        color: "#475569"
-      }
-    }, e.nextAction || e.stage)), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: "#334155"
-      }
-    }, "T", e.touchCount));
-  }))), /*#__PURE__*/React.createElement("style", null, "@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}"));
-}
-
-// ── ICP Status config ─────────────────────────────────────────────────────────
-var ICP = {
-  "Qualified": {
-    color: "#34D399",
-    bg: "rgba(52,211,153,0.15)"
-  },
-  "Disqualified": {
-    color: "#EF4444",
-    bg: "rgba(239,68,68,0.15)"
-  },
-  "DNC Skip": {
-    color: "#64748B",
-    bg: "rgba(100,116,139,0.15)"
-  },
-  "Client (Name-Drop)": {
-    color: "#F59E0B",
-    bg: "rgba(245,158,11,0.15)"
-  }
-};
-var ICP_FILTERS = ["All", "Qualified", "Disqualified", "DNC Skip", "Client (Name-Drop)"];
-
-// ── Tab bar ───────────────────────────────────────────────────────────────────
-function TabBar(_ref9) {
-  var active = _ref9.active,
-    setActive = _ref9.setActive;
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: "fixed",
-      bottom: 0,
-      left: 0,
-      right: 0,
-      zIndex: 50,
-      background: "#0D1117",
-      borderTop: "1px solid #1A2335",
-      display: "flex",
-      paddingBottom: "env(safe-area-inset-bottom)"
-    }
-  }, [{
-    id: "pipeline",
-    label: "Pipeline",
-    icon: "◈"
-  }, {
-    id: "log",
-    label: "Log Touch",
-    icon: "⊕"
-  }, {
-    id: "prospects",
-    label: "Prospects",
-    icon: "⊞"
-  }].map(function (tab) {
-    return /*#__PURE__*/React.createElement("button", {
-      key: tab.id,
-      onClick: function onClick() {
-        return setActive(tab.id);
-      },
-      style: {
-        flex: 1,
-        padding: "10px 0 8px",
-        background: "none",
-        border: "none",
-        cursor: "pointer",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 3
-      }
-    }, /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 18,
-        color: active === tab.id ? "#F59E0B" : "#334155"
-      }
-    }, tab.icon), /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 9,
-        fontWeight: 700,
-        letterSpacing: "0.06em",
-        textTransform: "uppercase",
-        color: active === tab.id ? "#F59E0B" : "#334155"
-      }
-    }, tab.label));
-  }));
-}
-
-// ── Prospect Log Screen ───────────────────────────────────────────────────────
-function ProspectLogScreen(_ref0) {
-  var prospects = _ref0.prospects,
-    syncing = _ref0.syncing,
-    syncMsg = _ref0.syncMsg,
-    onSync = _ref0.onSync,
-    search = _ref0.search,
-    setSearch = _ref0.setSearch,
-    filterStatus = _ref0.filterStatus,
-    setFilterStatus = _ref0.setFilterStatus,
-    filterZip = _ref0.filterZip,
-    setFilterZip = _ref0.setFilterZip,
-    expanded = _ref0.expanded,
-    setExpanded = _ref0.setExpanded;
-  // Unique ZIPs for filter
-  var zips = ["All"].concat(_toConsumableArray(Array.from(new Set(prospects.map(function (p) {
-    return p['ZIP'];
-  }).filter(Boolean))).sort()));
-  var visible = prospects.filter(function (p) {
-    if (filterStatus !== "All" && p['ICP Status'] !== filterStatus) return false;
-    if (filterZip !== "All" && p['ZIP'] !== filterZip) return false;
+  const visible = byUrgency(businesses.filter(b => {
+    if (!showClosed && (b.stage === "Dead" || b.stage === "Client")) return false;
+    if (filter !== "All" && b.stage !== filter) return false;
     if (search) {
-      var q = search.toLowerCase();
-      return (p['Business'] || '').toLowerCase().includes(q) || (p['DM'] || '').toLowerCase().includes(q) || (p['Address'] || '').toLowerCase().includes(q);
+      const q = search.toLowerCase();
+      return (b.business || "").toLowerCase().includes(q)
+        || (b.dm || "").toLowerCase().includes(q)
+        || (b.address || "").toLowerCase().includes(q)
+        || (b.zip || "").includes(q);
     }
     return true;
-  }).sort(function (a, b) {
-    // Sort newest first
-    var da = a['Date Added'] || '';
-    var db = b['Date Added'] || '';
-    return db.localeCompare(da);
+  }));
+
+  if (loading) return <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#F59E0B" }}>Loading…</div>;
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#0D1117", paddingBottom: 72 }}>
+      {tab === "list" && (
+        <ListScreen
+          stats={{ dueNow, dueWeek, active }}
+          visible={visible} total={businesses.length}
+          search={search} setSearch={setSearch}
+          filter={filter} setFilter={setFilter}
+          showClosed={showClosed} setShowClosed={setShowClosed}
+          expanded={expanded} setExpanded={setExpanded}
+          onAdd={() => setEditing(blank())}
+          onEdit={b => setEditing({ ...b })}
+          onTouch={addTouch} onAdvance={advance}
+        />
+      )}
+      {tab === "map" && (
+        <MapScreen businesses={businesses} setCoords={setCoords} />
+      )}
+      {tab === "settings" && (
+        <SettingsScreen businesses={businesses} commit={commit} setToast={setToast} />
+      )}
+
+      {editing && (
+        <EditModal
+          biz={editing}
+          onChange={setEditing}
+          onSave={() => { upsert(editing); setEditing(null); }}
+          onDelete={() => remove(editing.id)}
+          onClose={() => setEditing(null)}
+          isNew={!businesses.some(b => b.id === editing.id)}
+        />
+      )}
+
+      {toast && (
+        <div style={{ position: "fixed", bottom: 84, left: "50%", transform: "translateX(-50%)", background: "#F59E0B", color: "#0D1117", padding: "10px 18px", borderRadius: 24, fontSize: 13, fontWeight: 800, zIndex: 300, maxWidth: "90%", textAlign: "center", boxShadow: "0 6px 24px rgba(0,0,0,0.4)" }}>{toast}</div>
+      )}
+
+      <TabBar tab={tab} setTab={setTab} />
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// List screen
+// ─────────────────────────────────────────────────────────────────────────────
+function ListScreen({ stats, visible, total, search, setSearch, filter, setFilter, showClosed, setShowClosed, expanded, setExpanded, onAdd, onEdit, onTouch, onAdvance }) {
+  return (
+    <div>
+      <div style={{ padding: "max(env(safe-area-inset-top), 20px) 16px 0", borderBottom: "1px solid #1A2335" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
+          <div>
+            <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.14em", color: "#F59E0B", textTransform: "uppercase", marginBottom: 3 }}>Bedrock Benefits</div>
+            <div style={{ fontSize: 24, fontWeight: 900, letterSpacing: "-0.6px", lineHeight: 1 }}>CRM Tracker</div>
+          </div>
+          <button onClick={onAdd} style={{ background: "#F59E0B", color: "#0D1117", border: "none", borderRadius: 8, padding: "10px 18px", fontSize: 13, fontWeight: 800, cursor: "pointer" }}>+ Add</button>
+        </div>
+        <div style={{ display: "flex", gap: 28, paddingBottom: 16 }}>
+          <Stat label="Due now" value={stats.dueNow} color={stats.dueNow > 0 ? "#EF4444" : "#475569"} />
+          <Stat label="This week" value={stats.dueWeek} color="#F59E0B" />
+          <Stat label="Active" value={stats.active} color="#60A5FA" />
+        </div>
+      </div>
+
+      <div style={{ padding: "12px 16px 0" }}>
+        <input placeholder="Search business, owner, address, ZIP…" value={search} onChange={e => setSearch(e.target.value)} style={{ ...INPUT, marginBottom: 10 }} />
+        <div style={{ display: "flex", gap: 6, overflowX: "auto", paddingBottom: 10 }}>
+          {FILTER_STAGES.map(s => (
+            <Pill key={s} label={s} active={filter === s} color={STAGES[s]?.color || "#94A3B8"} onClick={() => setFilter(s)} />
+          ))}
+        </div>
+      </div>
+
+      <div style={{ padding: "0 16px 8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span style={{ fontSize: 11, color: "#475569" }}>{visible.length} of {total}</span>
+        <button onClick={() => setShowClosed(v => !v)} style={{ background: "none", border: "none", color: "#475569", fontSize: 11, cursor: "pointer" }}>{showClosed ? "Hide closed" : "Show closed"}</button>
+      </div>
+
+      <div style={{ padding: "0 16px" }}>
+        {visible.length === 0 && (
+          <div style={{ textAlign: "center", padding: "48px 0", color: "#334155", fontSize: 14 }}>
+            No businesses — tap <b style={{ color: "#F59E0B" }}>+ Add</b> to log one
+          </div>
+        )}
+        {visible.map(b => (
+          <Card key={b.id} b={b} expanded={expanded === b.id}
+            onToggle={() => setExpanded(expanded === b.id ? null : b.id)}
+            onEdit={() => onEdit(b)} onTouch={() => onTouch(b.id)} onAdvance={() => onAdvance(b.id)} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Stat({ label, value, color }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div style={{ fontSize: 22, fontWeight: 900, color, lineHeight: 1 }}>{value}</div>
+      <div style={{ fontSize: 9, color: "#475569", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 3 }}>{label}</div>
+    </div>
+  );
+}
+function Pill({ label, active, color, onClick }) {
+  return (
+    <button onClick={onClick} style={{ background: active ? color : "transparent", color: active ? "#0D1117" : "#475569", border: "1px solid " + (active ? color : "#1E293B"), borderRadius: 20, padding: "5px 12px", fontSize: 10, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap", letterSpacing: "0.04em", flexShrink: 0 }}>{label}</button>
+  );
+}
+function Badge({ children, bg, color }) {
+  return <span style={{ background: bg, color, borderRadius: 4, padding: "2px 7px", fontSize: 9, fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase" }}>{children}</span>;
+}
+
+function Card({ b, expanded, onToggle, onEdit, onTouch, onAdvance }) {
+  const u = urgency(b.followUp);
+  const s = STAGES[b.stage] || STAGES.Approached;
+  const atEnd = b.stage === "Dead" || CYCLE.indexOf(b.stage) >= CYCLE.length - 1;
+  return (
+    <div onClick={onToggle} style={{ background: "#131923", borderRadius: 10, marginBottom: 7, border: "1px solid #1A2335", borderLeft: "4px solid " + u.color, cursor: "pointer", overflow: "hidden", animation: u.pulse ? "pulse 2s infinite" : "none" }}>
+      <div style={{ padding: "12px 12px 10px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 15, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{b.business}</div>
+            <div style={{ fontSize: 12, color: "#64748B", marginBottom: 7 }}>{b.dm || "—"}{b.phone ? " · " + b.phone : ""}</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 5, alignItems: "center" }}>
+              <Badge bg={s.bg} color={s.color}>{b.stage}</Badge>
+              <Badge bg="#1A2335" color="#475569">T{b.touchCount}</Badge>
+              <span style={{ fontSize: 10, color: "#334155", fontWeight: 600 }}>{b.zip}</span>
+              {b.partner && b.partner !== "Solo" && <span style={{ fontSize: 10, color: "#60A5FA", fontWeight: 600 }}>w/{b.partner}</span>}
+            </div>
+          </div>
+          <div style={{ textAlign: "right", flexShrink: 0 }}>
+            <div style={{ fontSize: 13, fontWeight: 900, color: u.color, lineHeight: 1, marginBottom: 2 }}>{u.label}</div>
+            {b.followUp && <div style={{ fontSize: 9, color: "#334155" }}>{b.followUp.slice(5).replace("-", "/")}</div>}
+          </div>
+        </div>
+      </div>
+      {expanded && (
+        <div style={{ borderTop: "1px solid #1A2335", padding: "10px 12px" }} onClick={e => e.stopPropagation()}>
+          {/* Address and ZIP each on their own row, as requested */}
+          <Field label="Address">{b.address || "—"}</Field>
+          <Field label="ZIP">{b.zip || "—"}</Field>
+          {b.nextAction && <Field label="Next action" color="#F59E0B">{b.nextAction}</Field>}
+          {b.notes && <Field label="Notes">{b.notes}</Field>}
+          <div style={{ fontSize: 10, color: "#334155", margin: "8px 0 12px" }}>
+            Initial touch: {b.initialTouch || "—"} · Last contact: {b.lastContact || "—"}
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button onClick={onTouch} style={btn("#1A2335", "#64748B")}>+1 Touch</button>
+            {!atEnd && <button onClick={onAdvance} style={btn("#1A2335", "#A78BFA")}>Advance →</button>}
+            <button onClick={onEdit} style={btn("#F59E0B", "#0D1117")}>Edit</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+const btn = (bg, color) => ({ flex: 1, background: bg, color, border: bg === "#1A2335" ? "1px solid #1E293B" : "none", borderRadius: 7, padding: "9px 0", fontSize: 12, fontWeight: 700, cursor: "pointer" });
+
+function Field({ label, color, children }) {
+  return (
+    <div style={{ marginBottom: 9 }}>
+      <div style={{ fontSize: 9, fontWeight: 800, color: color || "#475569", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 3 }}>{label}</div>
+      <div style={{ fontSize: 13, color: "#94A3B8", lineHeight: 1.5 }}>{children}</div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Edit / Add modal
+// ─────────────────────────────────────────────────────────────────────────────
+function EditModal({ biz, onChange, onSave, onDelete, onClose, isNew }) {
+  const set = (k, v) => onChange({ ...biz, [k]: v });
+  return (
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 200, display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
+      <div onClick={e => e.stopPropagation()} style={{ background: "#131923", borderRadius: "16px 16px 0 0", width: "100%", maxWidth: 520, padding: "20px 16px max(28px, env(safe-area-inset-bottom))", maxHeight: "90vh", overflowY: "auto" }}>
+        <div style={{ fontSize: 18, fontWeight: 900, marginBottom: 16 }}>{isNew ? "Add business" : "Edit business"}</div>
+
+        <Row label="Business name"><input style={INPUT} value={biz.business} onChange={e => set("business", e.target.value)} /></Row>
+        <Row label="Owner / decision maker"><input style={INPUT} value={biz.dm} onChange={e => set("dm", e.target.value)} /></Row>
+        {/* Address and ZIP on separate rows */}
+        <Row label="Address"><input style={INPUT} value={biz.address} onChange={e => set("address", e.target.value)} placeholder="Street, city, state" /></Row>
+        <Row label="ZIP code"><input style={INPUT} inputMode="numeric" value={biz.zip} onChange={e => set("zip", e.target.value)} /></Row>
+        <Row label="Phone"><input style={INPUT} value={biz.phone} onChange={e => set("phone", e.target.value)} /></Row>
+
+        <div style={{ display: "flex", gap: 10 }}>
+          <Row label="Stage" flex>
+            <select style={INPUT} value={biz.stage} onChange={e => set("stage", e.target.value)}>
+              {ALL_STAGES.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </Row>
+          <Row label="Touch #" flex>
+            <input style={INPUT} type="number" min="0" value={biz.touchCount} onChange={e => set("touchCount", parseInt(e.target.value) || 0)} />
+          </Row>
+        </div>
+
+        <div style={{ display: "flex", gap: 10 }}>
+          <Row label="Initial touch" flex><input style={INPUT} type="date" value={biz.initialTouch || ""} onChange={e => set("initialTouch", e.target.value)} /></Row>
+          <Row label="Follow-up date" flex><input style={INPUT} type="date" value={biz.followUp || ""} onChange={e => set("followUp", e.target.value)} /></Row>
+        </div>
+        <Row label="Last contact"><input style={INPUT} type="date" value={biz.lastContact || ""} onChange={e => set("lastContact", e.target.value)} /></Row>
+        <Row label="Partner"><input style={INPUT} value={biz.partner} onChange={e => set("partner", e.target.value)} placeholder="Solo" /></Row>
+        <Row label="Next action"><input style={INPUT} value={biz.nextAction} onChange={e => set("nextAction", e.target.value)} /></Row>
+        <Row label="Notes"><textarea style={{ ...INPUT, minHeight: 80, resize: "vertical" }} value={biz.notes} onChange={e => set("notes", e.target.value)} /></Row>
+
+        <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+          <button onClick={onClose} style={{ flex: 1, background: "#1A2335", color: "#94A3B8", border: "1px solid #1E293B", borderRadius: 8, padding: "12px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>Cancel</button>
+          <button onClick={onSave} disabled={!biz.business.trim()} style={{ flex: 2, background: biz.business.trim() ? "#F59E0B" : "#334155", color: "#0D1117", border: "none", borderRadius: 8, padding: "12px 0", fontSize: 14, fontWeight: 800, cursor: biz.business.trim() ? "pointer" : "default" }}>Save</button>
+        </div>
+        {!isNew && (
+          <button onClick={() => { if (confirm("Delete " + biz.business + "?")) onDelete(); }} style={{ width: "100%", background: "none", color: "#EF4444", border: "none", padding: "14px 0 0", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>Delete</button>
+        )}
+      </div>
+    </div>
+  );
+}
+function Row({ label, children, flex }) {
+  return (
+    <div style={{ marginBottom: 12, flex: flex ? 1 : undefined }}>
+      <label style={LABEL}>{label}</label>
+      {children}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Map screen — Google Maps, markers coloured by stage
+// ─────────────────────────────────────────────────────────────────────────────
+let gmapsPromise = null;
+function loadGoogleMaps(key) {
+  if (window.google && window.google.maps) return Promise.resolve(window.google.maps);
+  if (gmapsPromise) return gmapsPromise;
+  gmapsPromise = new Promise((resolve, reject) => {
+    const cbName = "__gmapsCb" + Date.now();
+    window[cbName] = () => resolve(window.google.maps);
+    const s = document.createElement("script");
+    s.src = "https://maps.googleapis.com/maps/api/js?key=" + encodeURIComponent(key) + "&callback=" + cbName;
+    s.async = true;
+    s.onerror = () => { gmapsPromise = null; reject(new Error("Failed to load Google Maps")); };
+    document.head.appendChild(s);
   });
-  var qualCount = prospects.filter(function (p) {
-    return p['ICP Status'] === 'Qualified';
-  }).length;
-  var dncCount = prospects.filter(function (p) {
-    return p['ICP Status'] === 'DNC Skip';
-  }).length;
-  var clientCount = prospects.filter(function (p) {
-    return p['ICP Status'] === 'Client (Name-Drop)';
-  }).length;
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: "#0D1117",
-      minHeight: "100vh",
-      paddingBottom: 80,
-      fontFamily: "-apple-system,BlinkMacSystemFont,system-ui,sans-serif",
-      color: "#F1F5F9"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "max(env(safe-area-inset-top),20px) 16px 0 16px",
-      borderBottom: "1px solid #1A2335"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "flex-start",
-      marginBottom: 14
-    }
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      fontWeight: 800,
-      letterSpacing: "0.14em",
-      color: "#F59E0B",
-      textTransform: "uppercase",
-      marginBottom: 3
-    }
-  }, "Bedrock Benefits"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 24,
-      fontWeight: 900,
-      color: "#F1F5F9",
-      letterSpacing: "-0.6px",
-      lineHeight: 1
-    }
-  }, "Prospects")), /*#__PURE__*/React.createElement("button", {
-    onClick: onSync,
-    disabled: syncing,
-    style: {
-      background: "transparent",
-      color: syncing ? "#334155" : "#64748B",
-      border: "1px solid #1E293B",
-      borderRadius: 8,
-      padding: "9px 14px",
-      fontSize: 12,
-      fontWeight: 700,
-      cursor: syncing ? "default" : "pointer"
-    }
-  }, syncing ? "Syncing…" : "↓ Sync")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 20,
-      paddingBottom: 14
-    }
-  }, /*#__PURE__*/React.createElement(Stat, {
-    label: "Total",
-    value: prospects.length,
-    color: "#60A5FA"
-  }), /*#__PURE__*/React.createElement(Stat, {
-    label: "Qualified",
-    value: qualCount,
-    color: "#34D399"
-  }), /*#__PURE__*/React.createElement(Stat, {
-    label: "Clients",
-    value: clientCount,
-    color: "#F59E0B"
-  }), /*#__PURE__*/React.createElement(Stat, {
-    label: "DNC",
-    value: dncCount,
-    color: "#64748B"
-  })), syncMsg && /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 11,
-      color: syncMsg.includes('failed') ? '#EF4444' : '#34D399',
-      paddingBottom: 10,
-      textAlign: 'center'
-    }
-  }, syncMsg)), /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "12px 16px 0"
-    }
-  }, /*#__PURE__*/React.createElement("input", {
-    placeholder: "Search business, DM, address\u2026",
-    value: search,
-    onChange: function onChange(e) {
-      return setSearch(e.target.value);
-    },
-    style: {
-      width: "100%",
-      background: "#1E293B",
-      border: "1px solid #2A3141",
-      borderRadius: 8,
-      padding: "9px 12px",
-      color: "#F1F5F9",
-      fontSize: 13,
-      outline: "none",
-      fontFamily: "inherit",
-      boxSizing: "border-box",
-      marginBottom: 10
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 6,
-      overflowX: "auto",
-      paddingBottom: 8,
-      scrollbarWidth: "none"
-    }
-  }, ICP_FILTERS.map(function (s) {
-    var _ICP$s, _ICP$s2;
-    return /*#__PURE__*/React.createElement("button", {
-      key: s,
-      onClick: function onClick() {
-        return setFilterStatus(s);
-      },
-      style: {
-        background: filterStatus === s ? ((_ICP$s = ICP[s]) === null || _ICP$s === void 0 ? void 0 : _ICP$s.color) || "#94A3B8" : "transparent",
-        color: filterStatus === s ? "#0D1117" : "#475569",
-        border: "1px solid ".concat(filterStatus === s ? ((_ICP$s2 = ICP[s]) === null || _ICP$s2 === void 0 ? void 0 : _ICP$s2.color) || "#94A3B8" : "#1E293B"),
-        borderRadius: 20,
-        padding: "4px 11px",
-        fontSize: 10,
-        fontWeight: 700,
-        cursor: "pointer",
-        whiteSpace: "nowrap",
-        flexShrink: 0
+  return gmapsPromise;
+}
+
+function MapScreen({ businesses, setCoords }) {
+  const key = lsGet(GKEY_KEY) || "";
+  const mapRef = useRef(null);
+  const [status, setStatus] = useState(key ? "loading" : "nokey");
+  const [progress, setProgress] = useState("");
+
+  useEffect(() => {
+    if (!key) { setStatus("nokey"); return; }
+    let cancelled = false;
+    let map, markers = [];
+
+    loadGoogleMaps(key).then(async (maps) => {
+      if (cancelled) return;
+      setStatus("ready");
+      map = new maps.Map(mapRef.current, {
+        center: { lat: 39.65, lng: -104.99 }, // Denver metro
+        zoom: 10,
+        styles: DARK_MAP_STYLE,
+        disableDefaultUI: true, zoomControl: true, gestureHandling: "greedy",
+      });
+      const geocoder = new maps.Geocoder();
+      const bounds = new maps.LatLngBounds();
+      let placed = 0;
+
+      for (const b of businesses) {
+        if (cancelled) return;
+        let lat = b.lat, lng = b.lng;
+        if (lat == null || lng == null) {
+          const q = (b.address && b.address.trim())
+            ? b.address + " " + (b.zip || "")
+            : (b.zip ? b.zip + ", USA" : null);
+          if (!q) continue;
+          setProgress("Locating " + b.business + "…");
+          try {
+            const res = await geocodeOnce(geocoder, q);
+            if (!res) continue;
+            lat = res.lat; lng = res.lng;
+            setCoords(b.id, lat, lng); // cache so we don't re-geocode next time
+          } catch { continue; }
+        }
+        const s = STAGES[b.stage] || STAGES.Approached;
+        const marker = new maps.Marker({
+          position: { lat, lng }, map, title: b.business,
+          icon: { path: maps.SymbolPath.CIRCLE, fillColor: s.color, fillOpacity: 1, strokeColor: "#0D1117", strokeWeight: 2, scale: 8 },
+        });
+        const info = new maps.InfoWindow({
+          content: '<div style="font-family:sans-serif;min-width:150px"><b>' + esc(b.business) + '</b><br>' +
+            esc(b.dm || "") + '<br><span style="color:#555">' + esc(b.stage) + ' · T' + b.touchCount + ' · ' + esc(b.zip || "") + '</span>' +
+            (b.address ? '<br><span style="color:#777;font-size:11px">' + esc(b.address) + '</span>' : '') + '</div>',
+        });
+        marker.addListener("click", () => info.open(map, marker));
+        markers.push(marker);
+        bounds.extend({ lat, lng });
+        placed++;
       }
-    }, s);
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 6,
-      overflowX: "auto",
-      paddingBottom: 10,
-      scrollbarWidth: "none"
-    }
-  }, zips.map(function (z) {
-    return /*#__PURE__*/React.createElement("button", {
-      key: z,
-      onClick: function onClick() {
-        return setFilterZip(z);
-      },
-      style: {
-        background: filterZip === z ? "#60A5FA" : "transparent",
-        color: filterZip === z ? "#0D1117" : "#475569",
-        border: "1px solid ".concat(filterZip === z ? "#60A5FA" : "#1E293B"),
-        borderRadius: 20,
-        padding: "4px 11px",
-        fontSize: 10,
-        fontWeight: 700,
-        cursor: "pointer",
-        whiteSpace: "nowrap",
-        flexShrink: 0
+      if (!cancelled) {
+        setProgress("");
+        if (placed > 0) map.fitBounds(bounds);
+        if (placed === 1) map.setZoom(14);
       }
-    }, z);
-  }))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "0 16px 8px",
-      fontSize: 11,
-      color: "#475569"
-    }
-  }, visible.length, " showing"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "0 16px"
-    }
-  }, prospects.length === 0 && /*#__PURE__*/React.createElement("div", {
-    style: {
-      textAlign: "center",
-      padding: "48px 16px",
-      color: "#334155"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 32,
-      marginBottom: 12
-    }
-  }, "\u229E"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 14,
-      marginBottom: 6
-    }
-  }, "No prospects yet"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 12,
-      color: "#1E293B"
-    }
-  }, "Run the aflac-dm-lookup skill then tap \u2193 Sync")), visible.map(function (p) {
-    return /*#__PURE__*/React.createElement(ProspectCard, {
-      key: "".concat(p['Business'], "-").concat(p['ZIP']),
-      prospect: p,
-      expanded: expanded === "".concat(p['Business'], "-").concat(p['ZIP']),
-      onToggle: function onToggle() {
-        var key = "".concat(p['Business'], "-").concat(p['ZIP']);
-        setExpanded(expanded === key ? null : key);
-      }
+    }).catch(() => { if (!cancelled) setStatus("error"); });
+
+    return () => { cancelled = true; markers.forEach(m => m.setMap(null)); };
+  }, [key, businesses.length]);
+
+  if (status === "nokey") return <MapPlaceholder title="Add your Google Maps key" body="Go to Settings and paste a Google Maps JavaScript API key to see your businesses on the map." />;
+  if (status === "error") return <MapPlaceholder title="Map couldn't load" body="Check that your Google Maps API key is valid and that Maps JavaScript API + Geocoding API are enabled for it." />;
+
+  return (
+    <div style={{ position: "relative", height: "calc(100vh - 72px)" }}>
+      <div style={{ position: "absolute", top: "max(env(safe-area-inset-top), 14px)", left: 14, zIndex: 5, background: "rgba(13,17,23,0.85)", padding: "8px 12px", borderRadius: 10, border: "1px solid #1A2335" }}>
+        <div style={{ fontSize: 13, fontWeight: 900, marginBottom: 6 }}>Territory map</div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, maxWidth: 230 }}>
+          {CYCLE.map(s => (
+            <span key={s} style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 9, color: "#94A3B8" }}>
+              <span style={{ width: 9, height: 9, borderRadius: "50%", background: STAGES[s].color }} />{s}
+            </span>
+          ))}
+        </div>
+      </div>
+      {progress && <div style={{ position: "absolute", bottom: 14, left: "50%", transform: "translateX(-50%)", zIndex: 5, background: "rgba(13,17,23,0.9)", padding: "6px 14px", borderRadius: 20, fontSize: 11, color: "#F59E0B" }}>{progress}</div>}
+      <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
+    </div>
+  );
+}
+function geocodeOnce(geocoder, q) {
+  return new Promise((resolve, reject) => {
+    geocoder.geocode({ address: q }, (results, status) => {
+      if (status === "OK" && results[0]) {
+        const loc = results[0].geometry.location;
+        resolve({ lat: loc.lat(), lng: loc.lng() });
+      } else if (status === "ZERO_RESULTS") { resolve(null); }
+      else { reject(new Error(status)); }
     });
-  })));
+  });
+}
+const esc = s => String(s || "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function MapPlaceholder({ title, body }) {
+  return (
+    <div style={{ minHeight: "calc(100vh - 72px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 32, textAlign: "center" }}>
+      <div style={{ fontSize: 40, marginBottom: 12 }}>🗺️</div>
+      <div style={{ fontSize: 17, fontWeight: 800, marginBottom: 8 }}>{title}</div>
+      <div style={{ fontSize: 13, color: "#64748B", lineHeight: 1.6, maxWidth: 300 }}>{body}</div>
+    </div>
+  );
+}
+const DARK_MAP_STYLE = [
+  { elementType: "geometry", stylers: [{ color: "#1d2430" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#0D1117" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#94A3B8" }] },
+  { featureType: "road", elementType: "geometry", stylers: [{ color: "#2A3141" }] },
+  { featureType: "road", elementType: "labels.text.fill", stylers: [{ color: "#64748B" }] },
+  { featureType: "water", elementType: "geometry", stylers: [{ color: "#0b1a2b" }] },
+  { featureType: "poi", stylers: [{ visibility: "off" }] },
+  { featureType: "transit", stylers: [{ visibility: "off" }] },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Settings screen
+// ─────────────────────────────────────────────────────────────────────────────
+function SettingsScreen({ businesses, commit, setToast }) {
+  const [key, setKey] = useState(lsGet(GKEY_KEY) || "");
+  const [importText, setImportText] = useState("");
+  const [syncMsg, setSyncMsg] = useState("");
+
+  function saveKey() { lsSet(GKEY_KEY, key.trim()); setToast("Google Maps key saved"); }
+
+  function reloadSeed() {
+    setSyncMsg("Loading…");
+    fetch(SEED_URL + "?t=" + Date.now()).then(r => r.json()).then(j => {
+      const merged = mergeByUpdatedAt(businesses, j.businesses || []);
+      commit(merged, "Synced from repo");
+      setSyncMsg("Merged " + (j.businesses || []).length + " records from repo");
+    }).catch(() => setSyncMsg("Couldn't reach repo data file"));
+  }
+
+  function exportJSON() {
+    const payload = JSON.stringify({ version: 1, updatedAt: nowISO(), businesses }, null, 2);
+    navigator.clipboard?.writeText(payload).then(() => setToast("Copied JSON to clipboard")).catch(() => {});
+    const blob = new Blob([payload], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = "businesses.json"; a.click();
+  }
+
+  function doImport() {
+    try {
+      const parsed = JSON.parse(importText);
+      const incoming = Array.isArray(parsed) ? parsed : (parsed.businesses || []);
+      if (!incoming.length) { setToast("No businesses found in that JSON"); return; }
+      commit(mergeByUpdatedAt(businesses, incoming), "Imported " + incoming.length + " records");
+      setImportText("");
+    } catch { setToast("That's not valid JSON"); }
+  }
+
+  const sectionTitle = { fontSize: 11, fontWeight: 800, color: "#F59E0B", textTransform: "uppercase", letterSpacing: "0.1em", margin: "22px 0 10px" };
+
+  return (
+    <div style={{ padding: "max(env(safe-area-inset-top), 20px) 16px 24px" }}>
+      <div style={{ fontSize: 24, fontWeight: 900, letterSpacing: "-0.6px", marginBottom: 4 }}>Settings</div>
+      <div style={{ fontSize: 12, color: "#475569" }}>{businesses.length} businesses stored on this device</div>
+
+      <div style={sectionTitle}>Google Maps</div>
+      <label style={LABEL}>API key</label>
+      <input style={INPUT} value={key} onChange={e => setKey(e.target.value)} placeholder="AIza…" />
+      <div style={{ fontSize: 11, color: "#475569", margin: "6px 0 10px", lineHeight: 1.5 }}>Needs <b>Maps JavaScript API</b> + <b>Geocoding API</b> enabled. Stored only on this device.</div>
+      <button onClick={saveKey} style={{ background: "#F59E0B", color: "#0D1117", border: "none", borderRadius: 8, padding: "10px 18px", fontSize: 13, fontWeight: 800, cursor: "pointer" }}>Save key</button>
+
+      <div style={sectionTitle}>Data</div>
+      <button onClick={reloadSeed} style={fullBtn}>↻ Sync from repo (pull skill updates)</button>
+      {syncMsg && <div style={{ fontSize: 11, color: "#34D399", margin: "8px 0" }}>{syncMsg}</div>}
+      <button onClick={exportJSON} style={{ ...fullBtn, marginTop: 8 }}>⇩ Export my data (copy + download)</button>
+
+      <label style={{ ...LABEL, marginTop: 16 }}>Import / paste JSON</label>
+      <textarea style={{ ...INPUT, minHeight: 90, resize: "vertical" }} value={importText} onChange={e => setImportText(e.target.value)} placeholder='{"businesses":[…]}' />
+      <button onClick={doImport} style={{ ...fullBtn, marginTop: 8 }}>Merge imported JSON</button>
+
+      <div style={{ fontSize: 11, color: "#334155", marginTop: 20, lineHeight: 1.6 }}>
+        <b style={{ color: "#475569" }}>How updating works:</b> your phone is the live copy. The skills edit the repo's
+        <code> data/businesses.json</code>; tap <b>Sync from repo</b> to pull those in. To hand your field edits back,
+        tap <b>Export</b> and give that file to Claude.
+      </div>
+    </div>
+  );
+}
+const fullBtn = { width: "100%", background: "#1A2335", color: "#94A3B8", border: "1px solid #1E293B", borderRadius: 8, padding: "12px 0", fontSize: 13, fontWeight: 700, cursor: "pointer" };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tab bar
+// ─────────────────────────────────────────────────────────────────────────────
+function TabBar({ tab, setTab }) {
+  const tabs = [["list", "List", "☰"], ["map", "Map", "🗺️"], ["settings", "Settings", "⚙︎"]];
+  return (
+    <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, display: "flex", background: "rgba(13,17,23,0.96)", borderTop: "1px solid #1A2335", paddingBottom: "env(safe-area-inset-bottom)", zIndex: 100, backdropFilter: "blur(8px)" }}>
+      {tabs.map(([id, label, icon]) => (
+        <button key={id} onClick={() => setTab(id)} style={{ flex: 1, background: "none", border: "none", padding: "11px 0", cursor: "pointer", color: tab === id ? "#F59E0B" : "#475569" }}>
+          <div style={{ fontSize: 18, lineHeight: 1 }}>{icon}</div>
+          <div style={{ fontSize: 10, fontWeight: 700, marginTop: 3 }}>{label}</div>
+        </button>
+      ))}
+    </div>
+  );
 }
 
-// ── Prospect Card ─────────────────────────────────────────────────────────────
-function ProspectCard(_ref1) {
-  var p = _ref1.prospect,
-    expanded = _ref1.expanded,
-    onToggle = _ref1.onToggle;
-  var status = p['ICP Status'] || 'Qualified';
-  var icp = ICP[status] || ICP['Qualified'];
-  return /*#__PURE__*/React.createElement("div", {
-    onClick: onToggle,
-    style: {
-      background: "#131923",
-      borderRadius: 10,
-      marginBottom: 7,
-      border: "1px solid #1A2335",
-      borderLeft: "4px solid ".concat(icp.color),
-      cursor: "pointer",
-      overflow: "hidden"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "12px 12px 10px"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "flex-start",
-      gap: 8
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      flex: 1,
-      minWidth: 0
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 15,
-      fontWeight: 700,
-      color: "#F1F5F9",
-      marginBottom: 1,
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-      whiteSpace: "nowrap"
-    }
-  }, p['Business']), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 12,
-      color: "#64748B",
-      marginBottom: 6
-    }
-  }, p['DM'] || "Owner unknown", p['Phone'] ? " \xB7 ".concat(p['Phone']) : ""), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 11,
-      color: "#475569",
-      marginBottom: 6
-    }
-  }, p['Address'] || "Address unknown"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      flexWrap: "wrap",
-      gap: 5,
-      alignItems: "center"
-    }
-  }, /*#__PURE__*/React.createElement(Badge, {
-    bg: icp.bg,
-    color: icp.color
-  }, status), p['ZIP'] && /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 10,
-      color: "#334155",
-      fontWeight: 600
-    }
-  }, p['ZIP']), p['Industry'] && /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 10,
-      color: "#475569"
-    }
-  }, p['Industry']), p['Est. Employees'] && /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 10,
-      color: "#334155"
-    }
-  }, "~", p['Est. Employees'], " emp"))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      textAlign: "right",
-      flexShrink: 0
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      color: "#334155",
-      marginBottom: 2
-    }
-  }, p['Date Added'] || ""), p['Partner'] && p['Partner'] !== 'Solo' && /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      color: "#60A5FA",
-      fontWeight: 600
-    }
-  }, "w/", p['Partner'])))), expanded && /*#__PURE__*/React.createElement("div", {
-    style: {
-      borderTop: "1px solid #1A2335",
-      padding: "10px 12px"
-    },
-    onClick: function onClick(e) {
-      return e.stopPropagation();
-    }
-  }, p['DQ Reason'] && /*#__PURE__*/React.createElement(Sec, {
-    label: "DQ Reason",
-    color: "#EF4444"
-  }, p['DQ Reason']), p['Notes'] && /*#__PURE__*/React.createElement(Sec, {
-    label: "Notes",
-    color: "#475569"
-  }, p['Notes']), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 12,
-      flexWrap: "wrap",
-      marginTop: 4
-    }
-  }, p['Phone'] && /*#__PURE__*/React.createElement("a", {
-    href: "tel:".concat(p['Phone']),
-    style: {
-      background: "#F59E0B",
-      color: "#0D1117",
-      borderRadius: 7,
-      padding: "8px 16px",
-      fontSize: 12,
-      fontWeight: 700,
-      textDecoration: "none"
-    },
-    onClick: function onClick(e) {
-      return e.stopPropagation();
-    }
-  }, "Call ", p['Phone']))));
-}
+// ─────────────────────────────────────────────────────────────────────────────
+// PIN gate
+// ─────────────────────────────────────────────────────────────────────────────
+function PinGate({ children }) {
+  const [unlocked, setUnlocked] = useState(() => {
+    try {
+      const ts = sessionStorage.getItem(SESSION_KEY);
+      return ts ? (Date.now() - parseInt(ts) < SESSION_HRS * 3600000) : false;
+    } catch { return false; }
+  });
+  const [input, setInput] = useState("");
+  const [shake, setShake] = useState(false);
 
-// ── PIN Gate ──────────────────────────────────────────────────────────────────
-var CORRECT_PIN = "5280"; // ← change this to your preferred PIN
-var SESSION_KEY = "aflac:unlocked";
-var SESSION_HRS = 8; // auto-lock after 8 hours
-
-function PinGate(_ref10) {
-  var children = _ref10.children;
-  var _useState49 = useState(function () {
-      try {
-        var ts = sessionStorage.getItem(SESSION_KEY);
-        if (!ts) return false;
-        return Date.now() - parseInt(ts) < SESSION_HRS * 3600000;
-      } catch (_unused3) {
-        return false;
-      }
-    }),
-    _useState50 = _slicedToArray(_useState49, 2),
-    unlocked = _useState50[0],
-    setUnlocked = _useState50[1];
-  var _useState51 = useState(""),
-    _useState52 = _slicedToArray(_useState51, 2),
-    input = _useState52[0],
-    setInput = _useState52[1];
-  var _useState53 = useState(false),
-    _useState54 = _slicedToArray(_useState53, 2),
-    shake = _useState54[0],
-    setShake = _useState54[1];
   function press(d) {
     if (shake) return;
-    var next = input + d;
-    if (next.length < CORRECT_PIN.length) {
-      setInput(next);
-      return;
-    }
-    // Full PIN entered
+    const next = input + d;
+    if (next.length < CORRECT_PIN.length) { setInput(next); return; }
     if (next === CORRECT_PIN) {
-      try {
-        sessionStorage.setItem(SESSION_KEY, Date.now().toString());
-      } catch (_unused4) {}
+      try { sessionStorage.setItem(SESSION_KEY, Date.now().toString()); } catch {}
       setUnlocked(true);
     } else {
       setShake(true);
-      setTimeout(function () {
-        setShake(false);
-        setInput("");
-      }, 650);
+      setTimeout(() => { setShake(false); setInput(""); }, 650);
     }
-  }
-  function del() {
-    setInput(function (i) {
-      return i.slice(0, -1);
-    });
   }
   if (unlocked) return children;
-  var dots = Array.from({
-    length: CORRECT_PIN.length
-  }, function (_, i) {
-    return /*#__PURE__*/React.createElement("div", {
-      key: i,
-      style: {
-        width: 14,
-        height: 14,
-        borderRadius: "50%",
-        background: i < input.length ? "#F59E0B" : "transparent",
-        border: "2px solid ".concat(i < input.length ? "#F59E0B" : "#334155"),
-        transition: "all 0.15s"
-      }
-    });
-  });
-  var keys = [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"], [null, "0", "del"]];
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: "#0D1117",
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      fontFamily: "-apple-system, BlinkMacSystemFont, system-ui, sans-serif",
-      animation: shake ? "shake 0.6s ease" : "none",
-      userSelect: "none"
-    }
-  }, /*#__PURE__*/React.createElement("style", null, "\n        @keyframes shake {\n          0%,100%{transform:translateX(0)}\n          15%{transform:translateX(-10px)}\n          30%{transform:translateX(10px)}\n          45%{transform:translateX(-8px)}\n          60%{transform:translateX(8px)}\n          75%{transform:translateX(-4px)}\n          90%{transform:translateX(4px)}\n        }\n      "), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 48,
-      textAlign: "center"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 11,
-      fontWeight: 800,
-      letterSpacing: "0.14em",
-      color: "#F59E0B",
-      textTransform: "uppercase",
-      marginBottom: 6
-    }
-  }, "Bedrock Benefits"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 28,
-      fontWeight: 900,
-      color: "#F1F5F9",
-      letterSpacing: "-0.6px"
-    }
-  }, "Pipeline")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 16,
-      marginBottom: 48
-    }
-  }, dots), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "grid",
-      gridTemplateColumns: "repeat(3,72px)",
-      gap: 12
-    }
-  }, keys.flat().map(function (k, i) {
-    if (k === null) return /*#__PURE__*/React.createElement("div", {
-      key: i
-    });
-    var isDel = k === "del";
-    return /*#__PURE__*/React.createElement("button", {
-      key: i,
-      onPointerDown: function onPointerDown(e) {
-        e.preventDefault();
-        isDel ? del() : press(k);
-      },
-      style: {
-        width: 72,
-        height: 72,
-        borderRadius: "50%",
-        background: isDel ? "transparent" : "#161B27",
-        border: isDel ? "none" : "1px solid #1E293B",
-        color: isDel ? "#475569" : "#F1F5F9",
-        fontSize: isDel ? 18 : 22,
-        fontWeight: 700,
-        cursor: "pointer",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        WebkitTapHighlightColor: "transparent",
-        transition: "background 0.1s"
-      }
-    }, isDel ? "⌫" : k);
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 40,
-      fontSize: 11,
-      color: "#334155"
-    }
-  }, "Enter PIN to continue"));
+
+  const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", null, "0", "del"];
+  return (
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", userSelect: "none", animation: shake ? "shake 0.6s ease" : "none" }}>
+      <div style={{ marginBottom: 44, textAlign: "center" }}>
+        <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.14em", color: "#F59E0B", textTransform: "uppercase", marginBottom: 6 }}>Bedrock Benefits</div>
+        <div style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.6px" }}>CRM Tracker</div>
+      </div>
+      <div style={{ display: "flex", gap: 16, marginBottom: 44 }}>
+        {Array.from({ length: CORRECT_PIN.length }, (_, i) => (
+          <div key={i} style={{ width: 14, height: 14, borderRadius: "50%", background: i < input.length ? "#F59E0B" : "transparent", border: "2px solid " + (i < input.length ? "#F59E0B" : "#334155"), transition: "all 0.15s" }} />
+        ))}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 72px)", gap: 12 }}>
+        {keys.map((k, i) => k === null ? <div key={i} /> : (
+          <button key={i} onPointerDown={e => { e.preventDefault(); k === "del" ? setInput(v => v.slice(0, -1)) : press(k); }}
+            style={{ width: 72, height: 72, borderRadius: "50%", background: k === "del" ? "transparent" : "#161B27", border: k === "del" ? "none" : "1px solid #1E293B", color: k === "del" ? "#475569" : "#F1F5F9", fontSize: k === "del" ? 18 : 22, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {k === "del" ? "⌫" : k}
+          </button>
+        ))}
+      </div>
+      <div style={{ marginTop: 36, fontSize: 11, color: "#334155" }}>Enter PIN to continue</div>
+    </div>
+  );
 }
-ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(PinGate, null, /*#__PURE__*/React.createElement(App, null)));
-</script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js', { scope: './' })
-        .catch(e => console.warn('SW registration failed:', e));
-    });
-  }
+
+ReactDOM.createRoot(document.getElementById("root")).render(<PinGate><App /></PinGate>);
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(() => {}));
+}
 </script>
 </body>
 </html>
